@@ -1,17 +1,27 @@
 import os, time
 from selenium import webdriver
 
-SCROLL_DOWN_LOOP_COUNT = 5
+SCROLL_DOWN_LOOP_COUNT = 10
+NUMBER_OF_ATTEMPTS = 3
+GENERAL_WAITER = 5
+WAIT_BEFORE_NEXT_ATTEMPT = 5
 # def start_driver():
 #     driver = webdriver.Chrome("/usr/local/bin/chromedriver")
 #     return driver
 
 
 def get_cities_list(d):
+    """
+    Gets list of cities from homepage of nomadlist.com, sorted by total count of users that visited the city
+    Scrolls down the page SCROLL_DOWN_LOOP_COUNT times
+    """
     go_to_url(d, 'https://nomadlist.com')
-    time.sleep(5)
+    time.sleep(GENERAL_WAITER)
     d.find_element_by_xpath("//option[@data-sort='users_been_count']").click()
-    time.sleep(5)
+    time.sleep(GENERAL_WAITER)
+    # The homepage initially loads with around 20 cities, to get more cities we need to scroll down
+    # For initial testing purposes the SCROLL_DOWN_LOOP_COUNT can be set to a small number
+    # Each scroll adds apprx 24 cities (can vary based on screen resolution)
     scroll_down(d, SCROLL_DOWN_LOOP_COUNT)
     city_list = []
     city_elements = d.find_elements_by_css_selector("li[data-type='city']")
@@ -21,12 +31,30 @@ def get_cities_list(d):
 
 
 def scroll_down(d, num):
+    """
+    Function for scrolling down on home page.
+    Breaks if bottom of page is reached before we run out of loops to go through.
+    Gives 3 more attempts in case there was in issue scrolling before
+    (e.g. slow internet connection and new cities didn't load)
+    """
+    city_count = 0
+    attempt = 1
     for i in range(num):
         d.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(1)
+        city_count_new = len(d.find_elements_by_css_selector("li[data-type='city']"))
+        # print(f'City counts: old = {city_count}, new = {city_count_new}')
+        if city_count == city_count_new:
+            if attempt >= NUMBER_OF_ATTEMPTS:
+                break
+            else:
+                attempt += 1
+                time.sleep(WAIT_BEFORE_NEXT_ATTEMPT)
+        city_count = city_count_new
 
 
 def go_to_url(d, url):
+    """Navigates the browser to the url"""
     d.get(url)
 
 
@@ -38,7 +66,7 @@ def main():
     print(cities_list)
     print(len(cities_list))
 
-    time.sleep(5)
+    time.sleep(GENERAL_WAITER)
     driver.quit()
 
 
