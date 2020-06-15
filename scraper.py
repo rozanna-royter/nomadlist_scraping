@@ -1,7 +1,7 @@
 import os, time
 from selenium import webdriver
 
-SCROLL_DOWN_LOOP_COUNT = 3
+SCROLL_DOWN_LOOP_COUNT = 60
 NUMBER_OF_ATTEMPTS = 3
 GENERAL_WAITER = 5
 WAIT_BEFORE_NEXT_ATTEMPT = 5
@@ -11,7 +11,7 @@ CITIES_FILENAME = 'cities.txt'
 #     return driver
 
 
-def get_cities_list(d):
+def get_cities_list(d):  # TODO: Remove {slug}
     """
     Gets list of cities from homepage of nomadlist.com, sorted by total count of users that visited the city
     Scrolls down the page SCROLL_DOWN_LOOP_COUNT times
