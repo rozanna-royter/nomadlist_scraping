@@ -1,10 +1,11 @@
 import os, time
 from selenium import webdriver
 
-SCROLL_DOWN_LOOP_COUNT = 10
+SCROLL_DOWN_LOOP_COUNT = 3
 NUMBER_OF_ATTEMPTS = 3
 GENERAL_WAITER = 5
 WAIT_BEFORE_NEXT_ATTEMPT = 5
+CITIES_FILENAME = 'cities.txt'
 # def start_driver():
 #     driver = webdriver.Chrome("/usr/local/bin/chromedriver")
 #     return driver
@@ -53,6 +54,13 @@ def scroll_down(d, num):
         city_count = city_count_new
 
 
+def write_list_to_file(filename, lst):
+    """Writes a list to a file"""
+    with open(filename, 'w') as f:
+        for li in lst:
+            f.write('%s\n' % li)
+
+
 def go_to_url(d, url):
     """Navigates the browser to the url"""
     d.get(url)
@@ -65,6 +73,7 @@ def main():
     cities_list = get_cities_list(driver)
     print(cities_list)
     print(len(cities_list))
+    write_list_to_file(CITIES_FILENAME, cities_list)
 
     time.sleep(GENERAL_WAITER)
     driver.quit()
