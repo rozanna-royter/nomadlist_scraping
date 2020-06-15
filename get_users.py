@@ -1,6 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 
+CITIES_FILENAME = 'cities.txt'
+USERS_FILENAME = 'users.txt'
+
 
 def get_domain(city_name):
     """
@@ -27,7 +30,7 @@ def scrap_city(domain):
     people = []
     for a in people_there.find_all('a', href=True):
         people.append(a['href'][2:])
-    return(people)
+    return (people)
 
 
 def get_all_users(list_of_cities):
@@ -39,15 +42,27 @@ def get_all_users(list_of_cities):
     users_names = []
     for city in list_of_cities:
         domain = get_domain(city)
-        users_names.extend(scrap_city(domain))
+        try:
+            users_names.extend(scrap_city(domain))
+        except:
+            print(f"{city} city page not found")
         users_names = list(set(users_names))
-    return(users_names)
+        print(f"adding users from {city}")
+    return (users_names)
+
+
+def write_list_to_file(filename, lst):
+    """Writes a list to a file"""
+    with open(filename, 'w') as f:
+        for li in lst:
+            f.write('%s\n' % li)
 
 
 def main():
-    cities = ['canggu', 'lisbon', 'berlin', 'buenos-aires', 'chiang-mai', 'puerto-vallarta', 'bangkok', 'mexico-city', 'belgrade', 'bengaluru', 'prague', 'taipei', 'cape-town', 'budapest', 'auckland', 'warsaw', 'singapore']
-    list_of_cities = ['canggu', 'lisbon']
-    print(get_all_users(list_of_cities))
+    cities = open(CITIES_FILENAME).read()
+    list_of_cities = cities.split("\n")
+    users_list = get_all_users(list_of_cities)
+    write_list_to_file(USERS_FILENAME, users_list)
     return 0
 
 
