@@ -1,10 +1,8 @@
-import os, time, json
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from bs4 import BeautifulSoup
 import time
 import utils
-from scraper import write_list_to_file
 
 GENERAL_WAITER = 5
 USERS_WAITER = 10
