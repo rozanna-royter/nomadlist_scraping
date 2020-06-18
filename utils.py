@@ -2,6 +2,10 @@ import json
 import os
 import sys
 
+PATH_TO_CHROMEDRIVER_MACOS = 'Drivers/macos/chromedriver'
+PATH_TO_CHROMEDRIVER_LINUX = 'Drivers/linux/chromedriver'
+PATH_TO_CHROMEDRIVER_WINDOWS = 'Drivers/windows/chromedriver.exe'
+
 
 def write_dict_to_json(filename, dct):
     """Writes a dictionary to a json file"""
@@ -49,3 +53,15 @@ def get_new_items(existing_list, new_list):
         if li not in existing_list:
             res_list.append(li)
     return res_list
+
+
+def get_chromedriver_path():
+    osname = sys.platform
+    if osname == 'darwin':
+        return PATH_TO_CHROMEDRIVER_MACOS
+    elif osname == 'win32':
+        return PATH_TO_CHROMEDRIVER_WINDOWS
+    elif osname in ('linux', 'linux2'):
+        return PATH_TO_CHROMEDRIVER_LINUX
+    else:
+        raise NotImplemented(f"Unknown OS '{osname}'")

@@ -73,7 +73,7 @@ def go_to_url(d, url):
 
 
 def main():
-    driver = webdriver.Chrome("/usr/local/bin/chromedriver")
+    driver = webdriver.Chrome(utils.get_chromedriver_path())
     driver.maximize_window()
 
     cities_list = cities_extraction(driver)

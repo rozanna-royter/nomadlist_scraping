@@ -141,7 +141,7 @@ def get_users_loop(driver, users_list):
 
 
 def main():  # TODO: bad gateway
-    driver = webdriver.Chrome("Drivers/chromedriver")
+    driver = webdriver.Chrome(utils.get_chromedriver_path())
     driver.maximize_window()
     log_in(driver)
     users_list = utils.read_list_from_file(USERS_LIST_FILENAME)
