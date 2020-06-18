@@ -77,7 +77,7 @@ def main():
     driver.maximize_window()
 
     cities_list = cities_extraction(driver)
-    print(len(cities_list))
+    print(f"Cities found: {len(cities_list)}")
     utils.write_list_to_file(CITIES_FILENAME, cities_list)
 
     time.sleep(GENERAL_WAITER)

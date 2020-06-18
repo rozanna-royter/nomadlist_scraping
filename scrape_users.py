@@ -35,8 +35,6 @@ def get_users_info(d, usernames):
 
         res[u]['twitter'] = get_socials(d, 'twitter')
         res[u]['instagram'] = get_socials(d, 'instagram')
-
-        print(res)
     return res
 
 
@@ -128,7 +126,6 @@ def user_info_extraction_cycle(driver, users_list):
         users_dict = utils.read_dict_from_json(USERS_INFO_FILENAME)
         users_list = get_new_users(users_list, users_dict)
     if users_list:
-        print(users_list)
         users_dict.update(get_users_info(driver, users_list))
         utils.write_dict_to_json(USERS_INFO_FILENAME, users_dict)
         print(f'Saving to file: {len(users_list)} new users')
@@ -137,8 +134,9 @@ def user_info_extraction_cycle(driver, users_list):
 def get_users_loop(driver, users_list):
     """Looping through sublists of users with extraction_cycle"""
     user_chunks = [users_list[x:x + USER_CHUNK_SIZE] for x in range(0, len(users_list), USER_CHUNK_SIZE)]
-    print(user_chunks)
+    i = 1
     for chunk in user_chunks:
+        print(f"Processing user chunk #{i} out of {len(user_chunks) + 1}")
         user_info_extraction_cycle(driver, chunk)
 
 

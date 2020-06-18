@@ -5,8 +5,11 @@ import scrape_users
 
 
 def main():
+    print("Scraping cities...")
     scrape_cities.main()
+    print("Getting all usernames...")
     get_users.main()
+    print("Scraping user info...")
     scrape_users.main()
 
 
