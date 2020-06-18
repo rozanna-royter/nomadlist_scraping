@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import utils
 
 CITIES_FILENAME = 'cities.txt'
 USERS_FILENAME = 'users.txt'
@@ -39,8 +40,7 @@ def get_all_users(list_of_cities):
     params: list of cities
     return: list of users (uniq)
     """
-    users_text_file = open("users.txt", "r")
-    users_names = users_text_file.read().split()
+    users_names = utils.read_list_from_file(USERS_FILENAME)
     for city in list_of_cities:
         domain = get_domain(city)
         try:
@@ -52,18 +52,11 @@ def get_all_users(list_of_cities):
     return users_names
 
 
-def write_list_to_file(filename, lst):
-    """Writes a list to a file"""
-    with open(filename, 'w') as f:
-        for li in lst:
-            f.write('%s\n' % li)
-
-
 def main():
-    cities = open(CITIES_FILENAME).read()
+    cities = utils.read_list_from_file(CITIES_FILENAME)
     list_of_cities = cities.split("\n")
     users_list = get_all_users(list_of_cities)
-    write_list_to_file(USERS_FILENAME, users_list)
+    utils.write_list_to_file(USERS_FILENAME, users_list)
     return 0
 
 

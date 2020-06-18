@@ -33,6 +33,19 @@ def read_list_from_file(filename):
 
 
 def check_if_file_exists(filename):
+    """Prints an error if file doesn't exist"""
     if not os.path.isfile(filename):
         print(f"File {filename} doesn't exist")
         sys.exit(1)
+
+
+def get_new_items(existing_list, new_list):
+    """
+    Returns a list of items that are present in new_list, but not present in existing_list.
+    Same as set, but keeping the order
+    """
+    res_list = []
+    for li in new_list:
+        if li not in existing_list:
+            res_list.append(li)
+    return res_list

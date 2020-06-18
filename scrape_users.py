@@ -121,7 +121,7 @@ def get_new_users(user_list, users_dict):
     return res_list
 
 
-def extraction_cycle(driver, users_list):
+def user_info_extraction_cycle(driver, users_list):
     """Process of extracting user data of user_list"""
     users_dict = {}
     if not START_FROM_TOP:
@@ -139,11 +139,11 @@ def get_users_loop(driver, users_list):
     user_chunks = [users_list[x:x + USER_CHUNK_SIZE] for x in range(0, len(users_list), USER_CHUNK_SIZE)]
     print(user_chunks)
     for chunk in user_chunks:
-        extraction_cycle(driver, chunk)
+        user_info_extraction_cycle(driver, chunk)
 
 
 def main():  # TODO: bad gateway
-    driver = webdriver.Chrome("/usr/local/bin/chromedriver")
+    driver = webdriver.Chrome("Drivers/chromedriver")
     driver.maximize_window()
     # log_in(driver)
     users_list = utils.read_list_from_file(USERS_LIST_FILENAME)
@@ -152,7 +152,7 @@ def main():  # TODO: bad gateway
     if SAVE_MID_RESULTS:
         get_users_loop(driver, users_list)
     else:
-        extraction_cycle(driver, users_list)
+        user_info_extraction_cycle(driver, users_list)
     time.sleep(GENERAL_WAITER)
     driver.quit()
 
