@@ -39,7 +39,8 @@ def get_all_users(list_of_cities):
     params: list of cities
     return: list of users (uniq)
     """
-    users_names = []
+    users_text_file = open("users.txt", "r")
+    users_names = users_text_file.read().split()
     for city in list_of_cities:
         domain = get_domain(city)
         try:
@@ -48,7 +49,7 @@ def get_all_users(list_of_cities):
             print(f"{city} city page not found")
         users_names = list(set(users_names))
         print(f"adding users from {city}")
-    return (users_names)
+    return users_names
 
 
 def write_list_to_file(filename, lst):
