@@ -2,7 +2,7 @@ import os, time
 from selenium import webdriver
 import utils
 
-SCROLL_DOWN_LOOP_COUNT = 5
+SCROLL_DOWN_LOOP_COUNT = 60
 NUMBER_OF_ATTEMPTS = 3
 GENERAL_WAITER = 5
 WAIT_BEFORE_NEXT_ATTEMPT = 5
