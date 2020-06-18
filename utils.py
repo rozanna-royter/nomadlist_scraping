@@ -64,4 +64,4 @@ def get_chromedriver_path():
     elif osname in ('linux', 'linux2'):
         return PATH_TO_CHROMEDRIVER_LINUX
     else:
-        raise NotImplemented(f"Unknown OS '{osname}'")
+        raise NotImplementedError(f"Unknown OS '{osname}'")
