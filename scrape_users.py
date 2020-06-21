@@ -35,7 +35,17 @@ def get_users_info(d, usernames):
 
         res[u]['twitter'] = get_socials(d, 'twitter')
         res[u]['instagram'] = get_socials(d, 'instagram')
+
+        print_details(res[u], u)
     return res
+
+
+def print_details(r, u):
+    print(f"Username: {u}\nNumber of followers: {r['follower-count']}\n"
+          f"Following: {r['following-count']}\nNumber of trips: {r['trips-count']}\n"
+          f"Distance traveled: {r['distance-traveled']}\nCountries visited: {r['countries-count']}\n"
+          f"Cities visited: {r['cities-count']}\nTrip list: {r['trip_list']}\n"
+          f"Twitter account: {r['twitter']}\nInstagram account: {r['instagram']}\n")
 
 
 def get_trips_selenium(d):
