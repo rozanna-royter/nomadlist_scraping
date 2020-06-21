@@ -123,7 +123,10 @@ def user_info_extraction_cycle(driver, users_list):
     """Process of extracting user data of user_list"""
     users_dict = {}
     if not START_FROM_TOP:
-        users_dict = utils.read_dict_from_json(USERS_INFO_FILENAME)
+        try:
+            users_dict = utils.read_dict_from_json(USERS_INFO_FILENAME)
+        except:
+            users_dict = {}
         users_list = get_new_users(users_list, users_dict)
     if users_list:
         users_dict.update(get_users_info(driver, users_list))

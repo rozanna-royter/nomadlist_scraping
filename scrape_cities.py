@@ -59,7 +59,10 @@ def cities_extraction(driver):
     """Process of extracting user data of user_list"""
     cities_list = get_cities_list(driver)
     if not START_FROM_TOP:
-        cities_list_from_file = utils.read_list_from_file(CITIES_FILENAME)
+        try:
+            cities_list_from_file = utils.read_list_from_file(CITIES_FILENAME)
+        except:
+            cities_list_from_file = []
         result_list = cities_list_from_file
         result_list.extend(utils.get_new_items(cities_list_from_file, cities_list))
     else:

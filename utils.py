@@ -56,6 +56,7 @@ def get_new_items(existing_list, new_list):
 
 
 def get_chromedriver_path():
+    """Gets the correct chromedriver based on your system"""
     osname = sys.platform
     if osname == 'darwin':
         return PATH_TO_CHROMEDRIVER_MACOS
