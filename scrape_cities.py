@@ -4,22 +4,23 @@ import utils
 import config
 
 
-
-def get_cities_list(d):  # TODO: Remove {slug}
+def get_cities_list(driver):
     """
     Gets list of cities from homepage of nomadlist.com, sorted by total count of users that visited the city
     Scrolls down the page SCROLL_DOWN_LOOP_COUNT times
+    :param driver: The instantiated web driver
+    :return: List of cities extracted from the home page
     """
-    go_to_url(d, 'https://nomadlist.com')
+    utils.go_to_url(driver, config.BASE_URL)
     time.sleep(config.GENERAL_WAITER)
-    d.find_element_by_xpath("//option[@data-sort='users_been_count']").click()
+    driver.find_element_by_xpath("//option[@data-sort='users_been_count']").click()
     time.sleep(config.GENERAL_WAITER)
     # The homepage initially loads with around 20 cities, to get more cities we need to scroll down
     # For initial testing purposes the SCROLL_DOWN_LOOP_COUNT can be set to a small number
     # Each scroll adds apprx 24 cities (can vary based on screen resolution)
-    scroll_down(d, config.SCROLL_DOWN_LOOP_COUNT)
+    scroll_down(driver, config.SCROLL_DOWN_LOOP_COUNT)
     city_list = []
-    city_elements = d.find_elements_by_css_selector("li[data-type='city']")
+    city_elements = driver.find_elements_by_css_selector("li[data-type='city']")
     for c in city_elements:
         city_list.append(c.get_attribute("data-slug"))
     if '{slug}' in city_list:
@@ -27,19 +28,22 @@ def get_cities_list(d):  # TODO: Remove {slug}
     return city_list
 
 
-def scroll_down(d, num):
+def scroll_down(driver, num):
     """
     Function for scrolling down on home page.
     Breaks if bottom of page is reached before we run out of loops to go through.
     Gives 3 more attempts in case there was in issue scrolling before
     (e.g. slow internet connection and new cities didn't load)
+    :param driver: The instantiated web driver
+    :param num: Number of scrolls to perform
+    :return: None
     """
     city_count = 0
     attempt = 1
     for i in range(num):
-        d.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(1)
-        city_count_new = len(d.find_elements_by_css_selector("li[data-type='city']"))
+        city_count_new = len(driver.find_elements_by_css_selector("li[data-type='city']"))
         if city_count == city_count_new:
             if attempt >= config.NUMBER_OF_ATTEMPTS:
                 break
@@ -50,7 +54,11 @@ def scroll_down(d, num):
 
 
 def cities_extraction(driver):
-    """Process of extracting user data of user_list"""
+    """
+    Process of extracting user data of user_list
+    :param driver: The instantiated web driver
+    :return: List of cities
+    """
     cities_list = get_cities_list(driver)
     if not config.START_FROM_TOP:
         try:
@@ -62,11 +70,6 @@ def cities_extraction(driver):
     else:
         result_list = cities_list
     return result_list
-
-
-def go_to_url(d, url):
-    """Navigates the browser to the url"""
-    d.get(url)
 
 
 def main():

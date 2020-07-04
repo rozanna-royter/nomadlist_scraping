@@ -4,7 +4,6 @@ import utils
 import config
 
 
-
 def get_domain(city_name):
     """
     param: string with city name

@@ -25,3 +25,14 @@ USERS_FILENAME = 'users.txt'
 # Waiters
 GENERAL_WAITER = 5
 USERS_WAITER = 10
+
+# Driver paths
+PATH_TO_CHROMEDRIVER_MACOS = 'Drivers/macos/chromedriver'
+PATH_TO_CHROMEDRIVER_LINUX = 'Drivers/linux/chromedriver'
+PATH_TO_CHROMEDRIVER_WINDOWS = 'Drivers/windows/chromedriver.exe'
+OS_DRIVER_PATHS = {
+    'darwin': PATH_TO_CHROMEDRIVER_MACOS,
+    'win32': PATH_TO_CHROMEDRIVER_WINDOWS,
+    'linux': PATH_TO_CHROMEDRIVER_LINUX,
+    'linux2': PATH_TO_CHROMEDRIVER_LINUX
+}

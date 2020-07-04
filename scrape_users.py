@@ -6,48 +6,60 @@ import utils
 import config
 
 
-
-def get_users_info(d, usernames):
+def get_users_info(driver, usernames):
     """
     Main function for processing pages of users from usernames list.
     Uses selenium webdriver as well as beautiful soup.
+    :param driver: The instantiated web driver
+    :param usernames: List of user names
+    :return: Dictionary of users' info
     """
     res = {}
     for u in usernames:
-        go_to_url(d, f'{config.BASE_URL}/@{u}')
+        utils.go_to_url(driver, f'{config.BASE_URL}/@{u}')
         time.sleep(config.USERS_WAITER)
-        soup_html = BeautifulSoup(d.page_source, 'html.parser')
+        soup_html = BeautifulSoup(driver.page_source, 'html.parser')
         res[u] = {}
         for e in config.ELEMENTS_TO_PARSE:
             res[u][e] = get_text_from_info_bar(soup_html, e)
 
-        res[u]['trip_list'] = get_trips_selenium(d)
+        res[u]['trip_list'] = get_trips_selenium(driver)
 
-        res[u]['twitter'] = get_socials(d, 'twitter')
-        res[u]['instagram'] = get_socials(d, 'instagram')
+        res[u]['twitter'] = get_socials(driver, 'twitter')
+        res[u]['instagram'] = get_socials(driver, 'instagram')
 
         print_details(res[u], u)
     return res
 
 
-def print_details(r, u):
-    print(f"Username: {u}\nNumber of followers: {r['follower-count']}\n"
-          f"Following: {r['following-count']}\nNumber of trips: {r['trips-count']}\n"
-          f"Distance traveled: {r['distance-traveled']}\nCountries visited: {r['countries-count']}\n"
-          f"Cities visited: {r['cities-count']}\nTrip list: {r['trip_list']}\n"
-          f"Twitter account: {r['twitter']}\nInstagram account: {r['instagram']}\n")
+def print_details(info, username):
+    """
+    Prints all collected data per user
+    :param info: Dictionary of user info
+    :param username: User name
+    :return: None
+    """
+    print(f"Username: {username}\nNumber of followers: {info['follower-count']}\n"
+          f"Following: {info['following-count']}\nNumber of trips: {info['trips-count']}\n"
+          f"Distance traveled: {info['distance-traveled']}\nCountries visited: {info['countries-count']}\n"
+          f"Cities visited: {info['cities-count']}\nTrip list: {info['trip_list']}\n"
+          f"Twitter account: {info['twitter']}\nInstagram account: {info['instagram']}\n")
 
 
-def get_trips_selenium(d):
-    """Returns trips info from current page using selenium (faster than bs4)"""
-    trips = d.find_elements_by_xpath("//table[@id='trips']//tr[contains(@class,'trip')]")
+def get_trips_selenium(driver):
+    """
+    Returns trips info from current page using selenium (faster than bs4)
+    :param driver: The instantiated web driver
+    :return: Dictionary of trip info
+    """
+    trips = driver.find_elements_by_xpath("//table[@id='trips']//tr[contains(@class,'trip')]")
     trip_ids = [t.get_attribute('id') for t in trips]
     if 'trip_editor' in trip_ids:
         trip_ids.pop(trip_ids.index('trip_editor'))
     if '' in trip_ids:
         trip_ids.pop(trip_ids.index(''))
     try:
-        expand_trips_btn = d.find_element_by_xpath("//div[contains(@class,'action-expand-all')][@data-what='trips']")
+        expand_trips_btn = driver.find_element_by_xpath("//div[contains(@class,'action-expand-all')][@data-what='trips']")
     except NoSuchElementException:
         expand_trips_btn = None
     if expand_trips_btn:
@@ -57,14 +69,18 @@ def get_trips_selenium(d):
         trips_dict[tid] = {}
         for e in config.TRIP_ELEMENTS:
             if e == 'name':
-                trips_dict[tid][e] = d.find_element_by_xpath(f"//tr[@id='{tid}']//td[contains(@class,'{e}')]//h2").text
+                trips_dict[tid][e] = driver.find_element_by_xpath(f"//tr[@id='{tid}']//td[contains(@class,'{e}')]//h2").text
             else:
-                trips_dict[tid][e] = d.find_element_by_xpath(f"//tr[@id='{tid}']//td[contains(@class,'{e}')]").text
+                trips_dict[tid][e] = driver.find_element_by_xpath(f"//tr[@id='{tid}']//td[contains(@class,'{e}')]").text
     return trips_dict
 
 
 def get_trips(soup):
-    """Returns trips info from current page using bs4"""
+    """
+    Returns trips info from current page using bs4 (slower than Selenium)
+    :param soup: Html of the page (BeautifulSoup)
+    :return: Dictionary of trip info
+    """
     tids = [x['id'] for x in soup.findAll('tr', attrs={"class": "trip"})]
     trips_dict = {}
     for tid in tids:
@@ -78,39 +94,53 @@ def get_trips(soup):
     return trips_dict
 
 
-def get_socials(d, sn_name):
-    """Function for extracting social network information (i.e. Twitter and Instagram)"""
+def get_socials(driver, sn_name):
+    """
+    Function for extracting social network information (i.e. Twitter and Instagram)
+    :param driver: The instantiated web driver
+    :param sn_name: Social network name
+    :return: Social network username (if exists, else - None)
+    """
     try:
-        social_button = d.find_element_by_xpath(
+        social_button = driver.find_element_by_xpath(
             f"//a[contains(@class,'action-contact-user-{sn_name}')]").get_attribute('href')
         if social_button:
             return social_button.split('/')[-1]
         else:
-            return
+            return None
     except NoSuchElementException:
-        return
+        return None
 
 
 def get_text_from_info_bar(soup, el_name):
-    """Function for extracting info from an element of info bar"""
+    """
+    Function for extracting info from an element of info bar
+    :param soup: Html of the page (BeautifulSoup)
+    :param el_name: Element (class) name
+    :return: Appropriate info by element name (if exists, else - None)
+    """
     try:
         return soup.select_one(f'div[class*={el_name}]').find('div', attrs={"class": "number"}).text
     except AttributeError:
-        return
+        return None
 
 
-def go_to_url(d, url):
-    """Navigates the browser to the url"""
-    d.get(url)
-
-
-def log_in(d):
-    """Log in using a link"""
-    go_to_url(d, config.LOGIN_URL)
+def log_in(driver):
+    """
+    Log in using a link
+    :param driver: The instantiated web driver
+    :return: None
+    """
+    utils.go_to_url(driver, config.LOGIN_URL)
 
 
 def get_new_users(user_list, users_dict):
-    """Returns a list of users that are present in user_list, but not present among the keys of users_dict"""
+    """
+    Returns a list of users that are present in user_list, but not present among the keys of users_dict
+    :param user_list: Input list of users
+    :param users_dict: Dictionary of users to check against
+    :return: List of new users
+    """
     res_list = []
     for u in user_list:
         if u not in users_dict.keys():
@@ -119,7 +149,12 @@ def get_new_users(user_list, users_dict):
 
 
 def user_info_extraction_cycle(driver, users_list):
-    """Process of extracting user data of user_list"""
+    """
+    Process of extracting user data of user_list and saving them to a file
+    :param driver: The instantiated web driver
+    :param users_list: List of user names
+    :return: None
+    """
     users_dict = {}
     if not config.START_FROM_TOP:
         try:
@@ -134,7 +169,12 @@ def user_info_extraction_cycle(driver, users_list):
 
 
 def get_users_loop(driver, users_list):
-    """Looping through sublists of users with extraction_cycle"""
+    """
+    Looping through sublists of users with extraction_cycle
+    :param driver: The instantiated web driver
+    :param users_list: List of user names
+    :return: None
+    """
     user_chunks = [users_list[x:x + config.USER_CHUNK_SIZE] for x in range(0, len(users_list), config.USER_CHUNK_SIZE)]
     i = 1
     for chunk in user_chunks:
