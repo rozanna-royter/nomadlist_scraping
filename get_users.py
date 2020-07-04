@@ -1,9 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import utils
+import config
 
-CITIES_FILENAME = 'cities.txt'
-USERS_FILENAME = 'users.txt'
 
 
 def get_domain(city_name):
@@ -41,7 +40,7 @@ def get_all_users(list_of_cities):
     return: list of users (uniq)
     """
     try:
-        users_names = utils.read_list_from_file(USERS_FILENAME)
+        users_names = utils.read_list_from_file(config.USERS_FILENAME)
     except:
         users_names = []
     for city in list_of_cities:
@@ -56,9 +55,9 @@ def get_all_users(list_of_cities):
 
 
 def main():
-    cities = utils.read_list_from_file(CITIES_FILENAME)
+    cities = utils.read_list_from_file(config.CITIES_FILENAME)
     users_list = get_all_users(cities)
-    utils.write_list_to_file(USERS_FILENAME, users_list)
+    utils.write_list_to_file(config.USERS_FILENAME, users_list)
     return 0
 
 
