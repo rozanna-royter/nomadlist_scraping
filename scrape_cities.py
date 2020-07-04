@@ -13,16 +13,16 @@ def get_cities_list(driver):
     """
     utils.go_to_url(driver, config.BASE_URL)
     time.sleep(config.GENERAL_WAITER)
-    driver.find_element_by_xpath("//option[@data-sort='users_been_count']").click()
+    driver.find_element_by_xpath(config.BUTTON_SORT_CITIES_BY_USERS_BEEN).click()
     time.sleep(config.GENERAL_WAITER)
     # The homepage initially loads with around 20 cities, to get more cities we need to scroll down
     # For initial testing purposes the SCROLL_DOWN_LOOP_COUNT can be set to a small number
     # Each scroll adds apprx 24 cities (can vary based on screen resolution)
     scroll_down(driver, config.SCROLL_DOWN_LOOP_COUNT)
     city_list = []
-    city_elements = driver.find_elements_by_css_selector("li[data-type='city']")
+    city_elements = driver.find_elements_by_css_selector(config.CITY_ELEMENTS_CSS)
     for c in city_elements:
-        city_list.append(c.get_attribute("data-slug"))
+        city_list.append(c.get_attribute(config.CITY_NAME_ATTR))
     if '{slug}' in city_list:
         city_list.pop(city_list.index('{slug}'))
     return city_list
@@ -40,10 +40,11 @@ def scroll_down(driver, num):
     """
     city_count = 0
     attempt = 1
-    for i in range(num):
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    scroll_num = 0
+    while scroll_num < num:
+        driver.execute_script(config.SCROLL_DOWN_SCRIPT)
         time.sleep(1)
-        city_count_new = len(driver.find_elements_by_css_selector("li[data-type='city']"))
+        city_count_new = len(driver.find_elements_by_css_selector(config.CITY_ELEMENTS_CSS))
         if city_count == city_count_new:
             if attempt >= config.NUMBER_OF_ATTEMPTS:
                 break
@@ -51,6 +52,7 @@ def scroll_down(driver, num):
                 attempt += 1
                 time.sleep(config.WAIT_BEFORE_NEXT_ATTEMPT)
         city_count = city_count_new
+        scroll_num += 1
 
 
 def cities_extraction(driver):
@@ -77,7 +79,7 @@ def main():
     driver.maximize_window()
 
     cities_list = cities_extraction(driver)
-    print(f"Cities found: {len(cities_list)}")
+    print(config.MSG_DICT["CITIES_FOUND_COUNT"].format(len(cities_list)))
     utils.write_list_to_file(config.CITIES_FILENAME, cities_list)
 
     time.sleep(config.GENERAL_WAITER)

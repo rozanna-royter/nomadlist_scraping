@@ -8,11 +8,11 @@ def get_domain(city_name):
     """
     param: string with city name
     return: domain of the people area inside city's page
-    exemple:
+    example:
         input: berlin
         output: https://nomadlist.com/people/berlin
     """
-    city_domain = "https://nomadlist.com/people/" + city_name
+    city_domain = config.CITY_PEOPLE_URL + city_name
     return city_domain
 
 
@@ -29,7 +29,7 @@ def scrap_city(domain):
     people = []
     for a in people_there.find_all('a', href=True):
         people.append(a['href'][2:])
-    return (people)
+    return people
 
 
 def get_all_users(list_of_cities):
@@ -47,9 +47,9 @@ def get_all_users(list_of_cities):
         try:
             users_names.extend(scrap_city(domain))
         except:
-            print(f"{city} city page not found")
+            print(config.MSG_DICT["CITY_PAGE_NOT_FOUND"].format(city))
         users_names = list(set(users_names))
-        print(f"adding users from {city}")
+        print(config.MSG_DICT["ADDING_USERS"].format(city))
     return users_names
 
 

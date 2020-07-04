@@ -68,7 +68,7 @@ def check_if_file_exists(filename):
     :return: None
     """
     if not os.path.isfile(filename):
-        print(f"File {filename} doesn't exist")
+        print(config.MSG_DICT["FILE_NOT_FOUND"].format(filename))
         sys.exit(1)
 
 
@@ -96,4 +96,4 @@ def get_chromedriver_path():
     try:
         return config.OS_DRIVER_PATHS.get(osname)
     except:
-        raise NotImplementedError(f"Unknown OS '{osname}'")
+        raise NotImplementedError(config.MSG_DICT["OS_ERROR"].format(osname))

@@ -23,10 +23,10 @@ def get_users_info(driver, usernames):
         for e in config.ELEMENTS_TO_PARSE:
             res[u][e] = get_text_from_info_bar(soup_html, e)
 
-        res[u]['trip_list'] = get_trips_selenium(driver)
+        res[u][config.NAMES_DICT["TRIP_LIST"]] = get_trips_selenium(driver)
 
-        res[u]['twitter'] = get_socials(driver, 'twitter')
-        res[u]['instagram'] = get_socials(driver, 'instagram')
+        res[u][config.NAMES_DICT["TWITTER"]] = get_socials(driver, config.NAMES_DICT["TWITTER"])
+        res[u][config.NAMES_DICT["INSTAGRAM"]] = get_socials(driver, config.NAMES_DICT["INSTAGRAM"])
 
         print_details(res[u], u)
     return res
@@ -52,14 +52,14 @@ def get_trips_selenium(driver):
     :param driver: The instantiated web driver
     :return: Dictionary of trip info
     """
-    trips = driver.find_elements_by_xpath("//table[@id='trips']//tr[contains(@class,'trip')]")
+    trips = driver.find_elements_by_xpath(config.TRIPS_XPATH)
     trip_ids = [t.get_attribute('id') for t in trips]
-    if 'trip_editor' in trip_ids:
-        trip_ids.pop(trip_ids.index('trip_editor'))
+    if config.NAMES_DICT["TRIP_EDITOR"] in trip_ids:
+        trip_ids.pop(trip_ids.index(config.NAMES_DICT["TRIP_EDITOR"] ))
     if '' in trip_ids:
         trip_ids.pop(trip_ids.index(''))
     try:
-        expand_trips_btn = driver.find_element_by_xpath("//div[contains(@class,'action-expand-all')][@data-what='trips']")
+        expand_trips_btn = driver.find_element_by_xpath(config.BUTTON_EXPAND_ALL_TRIPS)
     except NoSuchElementException:
         expand_trips_btn = None
     if expand_trips_btn:
@@ -67,11 +67,11 @@ def get_trips_selenium(driver):
     trips_dict = {}
     for tid in trip_ids:
         trips_dict[tid] = {}
-        for e in config.TRIP_ELEMENTS:
-            if e == 'name':
-                trips_dict[tid][e] = driver.find_element_by_xpath(f"//tr[@id='{tid}']//td[contains(@class,'{e}')]//h2").text
+        for element in config.TRIP_ELEMENTS:
+            if element == 'name':
+                trips_dict[tid][element] = driver.find_element_by_xpath(config.CITY_NAME_ELEMENT_XPATH.format(tid, element)).text
             else:
-                trips_dict[tid][e] = driver.find_element_by_xpath(f"//tr[@id='{tid}']//td[contains(@class,'{e}')]").text
+                trips_dict[tid][element] = driver.find_element_by_xpath(config.TRIP_ELEMENT_XPATH.format(tid, element)).text
     return trips_dict
 
 
@@ -85,12 +85,12 @@ def get_trips(soup):
     trips_dict = {}
     for tid in tids:
         trips_dict[tid] = {}
-        for e in config.TRIP_ELEMENTS:
-            if e == 'name':
-                trips_dict[tid]['city'] = soup.find('tr', attrs={"id": tid}).find('td', attrs={"class": e}).find(
+        for element in config.TRIP_ELEMENTS:
+            if element == 'name':
+                trips_dict[tid]['city'] = soup.find('tr', attrs={"id": tid}).find('td', attrs={"class": element}).find(
                     'h2').text
             else:
-                trips_dict[tid][e] = soup.find('tr', attrs={"id": tid}).find('td', attrs={"class": e}).text
+                trips_dict[tid][element] = soup.find('tr', attrs={"id": tid}).find('td', attrs={"class": element}).text
     return trips_dict
 
 
@@ -103,7 +103,7 @@ def get_socials(driver, sn_name):
     """
     try:
         social_button = driver.find_element_by_xpath(
-            f"//a[contains(@class,'action-contact-user-{sn_name}')]").get_attribute('href')
+            config.GET_SOCIALS_XPATH.format(sn_name)).get_attribute(config.ATTRIBUTES_DICT["HREF"])
         if social_button:
             return social_button.split('/')[-1]
         else:
@@ -165,7 +165,7 @@ def user_info_extraction_cycle(driver, users_list):
     if users_list:
         users_dict.update(get_users_info(driver, users_list))
         utils.write_dict_to_json(config.USERS_INFO_FILENAME, users_dict)
-        print(f'Saving to file: {len(users_list)} new users')
+        print(config.MSG_DICT["SAVING_USERS_COUNT"].format(len(users_list)))
 
 
 def get_users_loop(driver, users_list):
@@ -178,7 +178,7 @@ def get_users_loop(driver, users_list):
     user_chunks = [users_list[x:x + config.USER_CHUNK_SIZE] for x in range(0, len(users_list), config.USER_CHUNK_SIZE)]
     i = 1
     for chunk in user_chunks:
-        print(f"Processing user chunk #{i} out of {len(user_chunks) + 1}")
+        print(config.MSG_DICT["PROCESSING_USER_CHUNK"].format(i, len(user_chunks) + 1))
         user_info_extraction_cycle(driver, chunk)
 
 
