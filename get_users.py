@@ -25,10 +25,10 @@ def scrap_city(domain):
     """
     r = requests.get(domain)
     soup = BeautifulSoup(r.content, 'html.parser')
-    people_there = soup.find('div', class_='people-here-now')
+    people_there = soup.find(config.ATTRIBUTES_DICT["DIV_TAG"], class_=config.ATTRIBUTES_DICT["PEOPLE"])
     people = []
-    for a in people_there.find_all('a', href=True):
-        people.append(a['href'][2:])
+    for a in people_there.find_all(config.ATTRIBUTES_DICT["A_TAG"], href=True):
+        people.append(a[config.ATTRIBUTES_DICT["HREF"]][2:])
     return people
 
 

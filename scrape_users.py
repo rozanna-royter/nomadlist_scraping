@@ -14,22 +14,24 @@ def get_users_info(driver, usernames):
     :param usernames: List of user names
     :return: Dictionary of users' info
     """
-    res = {}
-    for u in usernames:
-        utils.go_to_url(driver, f'{config.BASE_URL}/@{u}')
+    result = {}
+    for username in usernames:
+        utils.go_to_url(driver, f'{config.BASE_URL}/@{username}')
         time.sleep(config.USERS_WAITER)
         soup_html = BeautifulSoup(driver.page_source, 'html.parser')
-        res[u] = {}
+        result[username] = {}
         for e in config.ELEMENTS_TO_PARSE:
-            res[u][e] = get_text_from_info_bar(soup_html, e)
+            result[username][e] = get_text_from_info_bar(soup_html, e)
 
-        res[u][config.NAMES_DICT["TRIP_LIST"]] = get_trips_selenium(driver)
+        result[username][config.NAMES_DICT["TRIP_LIST"]] = get_trips_selenium(driver)
 
-        res[u][config.NAMES_DICT["TWITTER"]] = get_socials(driver, config.NAMES_DICT["TWITTER"])
-        res[u][config.NAMES_DICT["INSTAGRAM"]] = get_socials(driver, config.NAMES_DICT["INSTAGRAM"])
+        twitter_string = config.NAMES_DICT["TWITTER"]
+        instagram_string = config.NAMES_DICT["INSTAGRAM"]
+        result[username][twitter_string] = get_socials(driver, twitter_string)
+        result[username][instagram_string] = get_socials(driver, instagram_string)
 
-        print_details(res[u], u)
-    return res
+        print_details(result[username], username)
+    return result
 
 
 def print_details(info, username):
@@ -53,9 +55,10 @@ def get_trips_selenium(driver):
     :return: Dictionary of trip info
     """
     trips = driver.find_elements_by_xpath(config.TRIPS_XPATH)
-    trip_ids = [t.get_attribute('id') for t in trips]
-    if config.NAMES_DICT["TRIP_EDITOR"] in trip_ids:
-        trip_ids.pop(trip_ids.index(config.NAMES_DICT["TRIP_EDITOR"] ))
+    trip_ids = [t.get_attribute(config.ATTRIBUTES_DICT["ID"]) for t in trips]
+    trip_editor_string = config.NAMES_DICT["TRIP_EDITOR"]
+    if trip_editor_string in trip_ids:
+        trip_ids.pop(trip_ids.index(trip_editor_string))
     if '' in trip_ids:
         trip_ids.pop(trip_ids.index(''))
     try:
@@ -68,29 +71,12 @@ def get_trips_selenium(driver):
     for tid in trip_ids:
         trips_dict[tid] = {}
         for element in config.TRIP_ELEMENTS:
-            if element == 'name':
-                trips_dict[tid][element] = driver.find_element_by_xpath(config.CITY_NAME_ELEMENT_XPATH.format(tid, element)).text
+            if element == config.NAMES_DICT["NAME"]:
+                trips_dict[tid][element] = driver.find_element_by_xpath(
+                    config.CITY_NAME_ELEMENT_XPATH.format(tid, element)).text
             else:
-                trips_dict[tid][element] = driver.find_element_by_xpath(config.TRIP_ELEMENT_XPATH.format(tid, element)).text
-    return trips_dict
-
-
-def get_trips(soup):
-    """
-    Returns trips info from current page using bs4 (slower than Selenium)
-    :param soup: Html of the page (BeautifulSoup)
-    :return: Dictionary of trip info
-    """
-    tids = [x['id'] for x in soup.findAll('tr', attrs={"class": "trip"})]
-    trips_dict = {}
-    for tid in tids:
-        trips_dict[tid] = {}
-        for element in config.TRIP_ELEMENTS:
-            if element == 'name':
-                trips_dict[tid]['city'] = soup.find('tr', attrs={"id": tid}).find('td', attrs={"class": element}).find(
-                    'h2').text
-            else:
-                trips_dict[tid][element] = soup.find('tr', attrs={"id": tid}).find('td', attrs={"class": element}).text
+                trips_dict[tid][element] = driver.find_element_by_xpath(
+                    config.TRIP_ELEMENT_XPATH.format(tid, element)).text
     return trips_dict
 
 
@@ -120,7 +106,9 @@ def get_text_from_info_bar(soup, el_name):
     :return: Appropriate info by element name (if exists, else - None)
     """
     try:
-        return soup.select_one(f'div[class*={el_name}]').find('div', attrs={"class": "number"}).text
+        return soup.select_one(config.SELECT_CLASS_CONTAINS.format(el_name)).find(
+            config.ATTRIBUTES_DICT["DIV_TAG"], attrs={config.ATTRIBUTES_DICT["CLASS"]: config.NAMES_DICT["NUMBER"]}
+        ).text
     except AttributeError:
         return None
 

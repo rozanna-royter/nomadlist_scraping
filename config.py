@@ -49,15 +49,23 @@ BUTTON_EXPAND_ALL_TRIPS = "//div[contains(@class,'action-expand-all')][@data-wha
 CITY_NAME_ELEMENT_XPATH = "//tr[@id='{}']//td[contains(@class,'{}')]//h2"
 TRIP_ELEMENT_XPATH = "//tr[@id='{}']//td[contains(@class,'{}')]"
 GET_SOCIALS_XPATH = "//a[contains(@class,'action-contact-user-{}')]"
+SELECT_CLASS_CONTAINS = "div[class*={}]"
 ATTRIBUTES_DICT = {
     "CITY_NAME": "data-slug",
-    "HREF": "href"
+    "HREF": "href",
+    "ID": "id",
+    "CLASS": "class",
+    "DIV_TAG": "div",
+    "A_TAG": "a",
+    "PEOPLE": "people-here-now"
 }
 NAMES_DICT = {
     "TRIP_LIST": "trip_list",
     "TWITTER": 'twitter',
     "INSTAGRAM": "instagram",
-    "TRIP_EDITOR": "trip_editor"
+    "TRIP_EDITOR": "trip_editor",
+    "NAME": "name",
+    "NUMBER": "number"
 }
 
 # Messages
