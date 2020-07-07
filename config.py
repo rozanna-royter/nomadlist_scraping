@@ -20,7 +20,7 @@ CITY_PEOPLE_URL = 'https://nomadlist.com/people/'
 
 # Filenames
 CITIES_FILENAME = 'cities.txt'
-USERS_INFO_FILENAME = 'users_info.txt'
+USERS_INFO_FILENAME = 'users_info1.txt'
 USERS_LIST_FILENAME = 'users.txt'  # TODO: choose one
 USERS_FILENAME = 'users.txt'
 
@@ -58,7 +58,10 @@ ATTRIBUTES_DICT = {
     "CLASS": "class",
     "DIV_TAG": "div",
     "A_TAG": "a",
-    "PEOPLE": "people-here-now"
+    "PEOPLE": "people-here-now",
+    "LIKE_USER": "action-like-user",
+    "USER_ID": "data-user-id",
+    "USER_BIO": "bio tooltip"
 }
 NAMES_DICT = {
     "TRIP_LIST": "trip_list",
@@ -66,7 +69,9 @@ NAMES_DICT = {
     "INSTAGRAM": "instagram",
     "TRIP_EDITOR": "trip_editor",
     "NAME": "name",
-    "NUMBER": "number"
+    "NUMBER": "number",
+    "USER_ID": "user_id",
+    "BIO": "bio"
 }
 
 # Messages
