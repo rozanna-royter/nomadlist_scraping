@@ -143,16 +143,17 @@ def user_info_extraction_cycle(driver, users_list):
     :param users_list: List of user names
     :return: None
     """
+    users_info_filename = config.USERS_INFO_FILENAME
     users_dict = {}
     if not config.START_FROM_TOP:
         try:
-            users_dict = utils.read_dict_from_json(config.USERS_INFO_FILENAME)
+            users_dict = utils.read_dict_from_json(users_info_filename)
         except:
             users_dict = {}
         users_list = get_new_users(users_list, users_dict)
     if users_list:
         users_dict.update(get_users_info(driver, users_list))
-        utils.write_dict_to_json(config.USERS_INFO_FILENAME, users_dict)
+        utils.write_dict_to_json(users_info_filename, users_dict)
         print(config.MSG_DICT["SAVING_USERS_COUNT"].format(len(users_list)))
 
 

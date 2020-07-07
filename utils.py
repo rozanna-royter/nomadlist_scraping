@@ -21,7 +21,7 @@ def write_dict_to_json(filename, dct):
     :param dct: Dictionary that's being written
     :return: None
     """
-    check_if_file_exists(filename)
+    # check_if_file_exists(filename)
     with open(filename, 'w') as file:
         file.write(json.dumps(dct))
 
@@ -44,7 +44,7 @@ def write_list_to_file(filename, lst):
     :param lst: List that's being written
     :return: None
     """
-    check_if_file_exists(filename)
+    # check_if_file_exists(filename)
     with open(filename, 'w') as f:
         for li in lst:
             f.write('%s\n' % li)

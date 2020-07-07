@@ -28,7 +28,7 @@ def scrap_city(domain):
     people_there = soup.find(config.ATTRIBUTES_DICT["DIV_TAG"], class_=config.ATTRIBUTES_DICT["PEOPLE"])
     people = []
     for a in people_there.find_all(config.ATTRIBUTES_DICT["A_TAG"], href=True):
-        people.append(a[config.ATTRIBUTES_DICT["HREF"]][2:])
+        people.append(a[config.ATTRIBUTES_DICT["HREF"]][config.USER_LINK_CHAR_START:])
     return people
 
 
@@ -57,7 +57,6 @@ def main():
     cities = utils.read_list_from_file(config.CITIES_FILENAME)
     users_list = get_all_users(cities)
     utils.write_list_to_file(config.USERS_FILENAME, users_list)
-    return 0
 
 
 if __name__ == '__main__':
