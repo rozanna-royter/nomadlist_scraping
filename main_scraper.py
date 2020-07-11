@@ -67,7 +67,7 @@ def main():
                              '"all" - run all 3 options consecutively (also default),'
                              'it also set all other flags to default',
                         default='all')
-    parser.add_argument('--login_url', 'l', type=str, help='your login link from NomadList (magic link), if not passed'
+    parser.add_argument('--login_url', '-l', type=str, help='your login link from NomadList (magic link), if not passed'
                                                            'it will not scrap data that is open to subscribers only, '
                                                            'like social networks accounts (instagram, twitter...)'
                         , default='')
@@ -95,5 +95,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-# mandatory parameter for LOGIN_URL
