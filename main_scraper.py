@@ -15,9 +15,9 @@ def users():
     get_users.main()
 
 
-def info(from_scratch=0, chunk_size=10):
+def info(magic_link,from_scratch=0, chunk_size=10):
     print("Scraping user info...")
-    scrape_users.main(from_scratch, chunk_size)
+    scrape_users.main(magic_link,from_scratch, chunk_size)
 
 
 def all():
@@ -67,7 +67,7 @@ def main():
                              '"all" - run all 3 options consecutively (also default),'
                              'it also set all other flags to default',
                         default='all')
-    # parser.add_argument('login_url', 'l', type=str, help='your login link from NomadList (magic link)')
+    parser.add_argument('login_url', type=str, help='your login link from NomadList (magic link)')
     parser.add_argument('--new', '-n', type=bool, help='start scraping data from scratch or adding info to existing db',
                         default=False)
     parser.add_argument('--chunk_size', '-c', type=int, help='program scraps users and saves info by groups of users, '
@@ -85,11 +85,10 @@ def main():
     if args.run == 'cities':
         function_map[args.run](args.new, args.scroll_down)
     elif args.run == 'info':
-        function_map[args.run](args.new, args.chunk_size)
+        function_map[args.run](args.login_url,args.new, args.chunk_size)
     else:
         function_map[args.run]()
 
-    # mlink = args.login_url
 
 
 if __name__ == '__main__':
