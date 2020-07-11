@@ -4,10 +4,10 @@ import utils
 import config
 
 
-def get_cities_list(driver):
+def get_cities_list(driver, scroll_down_loop_count):
     """
     Gets list of cities from homepage of nomadlist.com, sorted by total count of users that visited the city
-    Scrolls down the page SCROLL_DOWN_LOOP_COUNT times
+    Scrolls down the page scroll_down_loop_count times
     :param driver: The instantiated web driver
     :return: List of cities extracted from the home page
     """
@@ -16,9 +16,9 @@ def get_cities_list(driver):
     driver.find_element_by_xpath(config.BUTTON_SORT_CITIES_BY_USERS_BEEN).click()
     time.sleep(config.GENERAL_WAITER)
     # The homepage initially loads with around 20 cities, to get more cities we need to scroll down
-    # For initial testing purposes the SCROLL_DOWN_LOOP_COUNT can be set to a small number
+    # For initial testing purposes the scroll_down_loop_count can be set to a small number
     # Each scroll adds apprx 24 cities (can vary based on screen resolution)
-    scroll_down(driver, config.SCROLL_DOWN_LOOP_COUNT)
+    scroll_down(driver, scroll_down_loop_count)
     city_list = []
     city_elements = driver.find_elements_by_css_selector(config.CITY_ELEMENTS_CSS)
     for c in city_elements:
@@ -55,14 +55,14 @@ def scroll_down(driver, num):
         scroll_num += 1
 
 
-def cities_extraction(driver):
+def cities_extraction(driver, from_scrach, scroll_down):
     """
     Process of extracting user data of user_list
     :param driver: The instantiated web driver
     :return: List of cities
     """
-    cities_list = get_cities_list(driver)
-    if not config.START_FROM_TOP:
+    cities_list = get_cities_list(driver, scroll_down)
+    if not from_scrach:
         try:
             cities_list_from_file = utils.read_list_from_file(config.CITIES_FILENAME)
         except:
@@ -74,11 +74,11 @@ def cities_extraction(driver):
     return result_list
 
 
-def main():
+def main(from_scratch, scroll_down_count):
     driver = webdriver.Chrome(utils.get_chromedriver_path())
     driver.maximize_window()
 
-    cities_list = cities_extraction(driver)
+    cities_list = cities_extraction(driver, from_scratch, scroll_down_count)
     print(config.MSG_DICT["CITIES_FOUND_COUNT"].format(len(cities_list)))
     utils.write_list_to_file(config.CITIES_FILENAME, cities_list)
 

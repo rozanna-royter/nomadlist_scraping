@@ -1,7 +1,5 @@
 # Flags
-START_FROM_TOP = False
 SAVE_MID_RESULTS = True
-USER_CHUNK_SIZE = 10
 USER_LINK_CHAR_START = 2
 
 # Elements
