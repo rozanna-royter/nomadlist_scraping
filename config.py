@@ -18,7 +18,7 @@ CITY_PEOPLE_URL = 'https://nomadlist.com/people/'
 
 # Filenames
 CITIES_FILENAME = 'cities.txt'
-USERS_INFO_FILENAME = 'users_info1.txt'
+USERS_INFO_FILENAME = 'users_info2.txt'
 USERS_LIST_FILENAME = 'users.txt'  # TODO: choose one
 USERS_FILENAME = 'users.txt'
 

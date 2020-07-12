@@ -203,15 +203,9 @@ def user_info_extraction_cycle_db(driver, users_list):
     :return: None
     """
     connection = db_utils.connect_to_db(config.DB_HOST, config.DB_USER, config.DB_PWD, config.DB_NAME)
-    # users_info_filename = config.USERS_INFO_FILENAME
-    users_dict = {}
-    # if not config.START_FROM_TOP:
-    #     existing_users = db_utils.get_existing_usernames(connection, users_list)
-    #     users_list = get_new_users_db(users_list, existing_users)
     if users_list:
         users_dict = get_users_info(driver, users_list)
         db_utils.save_user_info(connection, users_dict)
-        # utils.write_dict_to_json(users_info_filename, users_dict)
         print(config.MSG_DICT["SAVING_USERS_COUNT"].format(len(users_dict)))
     connection.close()
 
