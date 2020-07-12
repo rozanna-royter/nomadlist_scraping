@@ -1,7 +1,7 @@
 # Flags
 START_FROM_TOP = False
 SAVE_MID_RESULTS = True
-USER_CHUNK_SIZE = 10
+USER_CHUNK_SIZE = 3
 USER_LINK_CHAR_START = 2
 
 # Elements
@@ -65,6 +65,7 @@ ATTRIBUTES_DICT = {
 }
 NAMES_DICT = {
     "TRIP_LIST": "trip_list",
+    "DISTANCE": "distance-traveled",
     "TWITTER": 'twitter',
     "INSTAGRAM": "instagram",
     "TRIP_EDITOR": "trip_editor",
@@ -82,5 +83,12 @@ MSG_DICT = {
     "OS_ERROR": "Unknown OS '{}'",
     "FILE_NOT_FOUND": "File {} doesn't exist",
     "CITY_PAGE_NOT_FOUND": "{} city page not found",
-    "ADDING_USERS": "adding users from {}"
+    "ADDING_USERS": "adding users from {}",
+    "USER_NOT_FOUND": "Page for user {} was not found"
 }
+
+# Database
+DB_HOST = 'localhost'
+DB_USER = 'root'
+DB_PWD = 'password'
+DB_NAME = 'nomadlist'
