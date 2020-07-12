@@ -18,7 +18,7 @@ CITY_PEOPLE_URL = 'https://nomadlist.com/people/'
 
 # Filenames
 CITIES_FILENAME = 'cities.txt'
-USERS_INFO_FILENAME = 'users_info2.txt'
+USERS_INFO_FILENAME = 'users_info.txt'
 USERS_LIST_FILENAME = 'users.txt'  # TODO: choose one
 USERS_FILENAME = 'users.txt'
 
@@ -77,6 +77,7 @@ NAMES_DICT = {
 MSG_DICT = {
     "CITIES_FOUND_COUNT": "Cities found: {}",
     "SAVING_USERS_COUNT": "Saving to file: {} new users",
+    "SAVING_DB_USERS_COUNT": "Saving to DB: {} new users",
     "PROCESSING_USER_CHUNK": "Processing user chunk #{} out of {}",
     "OS_ERROR": "Unknown OS '{}'",
     "FILE_NOT_FOUND": "File {} doesn't exist",
@@ -90,3 +91,17 @@ DB_HOST = 'localhost'
 DB_USER = 'root'
 DB_PWD = 'password'
 DB_NAME = 'nomadlist'
+BIO_LENGTH = 511
+
+# Queries
+SELECT_USERS_BY_USERNAME = "SELECT id, username FROM users WHERE username in ({})"
+INSERT_SCRAPED_INFO = '''INSERT INTO users (external_id, username, follower_count, following_count, trips_count, 
+distance_traveled, countries_count, cities_count, twitter, instagram, bio) 
+VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'''
+UPDATE_USER = '''UPDATE users SET follower_count = %s, following_count = %s, trips_count = %s,  distance_traveled = %s, 
+countries_count = %s, cities_count = %s, twitter = %s, instagram = %s, bio = %s WHERE id = %s'''
+SELECT_TRIPS = "SELECT external_id FROM trips WHERE user_id = {}"
+INSERT_TRIPS_INFO = '''INSERT INTO trips (external_id, user_id, trip_start, trip_length, trip_end, city_country) 
+VALUES (%s,%s,%s,%s,%s,%s)'''
+SELECT_CITY_COUNTRY = 'SELECT id FROM city_country WHERE city_name = "{}" and country_name = "{}" LIMIT 1'
+INSERT_CITY_COUNTRY = "INSERT INTO city_country (city_name, country_name) VALUES (%s, %s)"

@@ -9,6 +9,7 @@ numpy==1.14.2
 pandas==0.25.3
 protobuf==3.6.0
 pycparser==2.20
+PyMySQL==0.9.3
 pyOpenSSL==19.1.0
 PySocks==1.7.1
 python-dateutil==2.8.1

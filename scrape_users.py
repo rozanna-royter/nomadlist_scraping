@@ -36,7 +36,6 @@ def get_users_info(driver, usernames):
         for element in config.ELEMENTS_TO_PARSE:
             result[username][element] = get_text_from_info_bar(soup_html, element)
         distance_traveled = config.NAMES_DICT['DISTANCE']
-        print(result[username][distance_traveled])
         if result[username][distance_traveled]:
             result[username][distance_traveled] = result[username][distance_traveled].replace(',', '')
 
@@ -47,10 +46,8 @@ def get_users_info(driver, usernames):
         result[username][twitter_string] = get_socials(driver, twitter_string)
         result[username][instagram_string] = get_socials(driver, instagram_string)
 
-        result[username][config.NAMES_DICT["BIO"]] = soup_html.find(config.ATTRIBUTES_DICT["DIV_TAG"],
-                                                                    class_=config.ATTRIBUTES_DICT["USER_BIO"]).text
-
-        print_details(result[username], username)
+        bio = soup_html.find(config.ATTRIBUTES_DICT["DIV_TAG"], class_=config.ATTRIBUTES_DICT["USER_BIO"]).text
+        result[username][config.NAMES_DICT["BIO"]] = bio[:config.BIO_LENGTH]
     return result
 
 
@@ -159,7 +156,7 @@ def get_new_users(user_list, users_dict):
 
 def get_new_users_db(user_list, existing_users):
     """
-    Returns a list of users that are present in user_list, but not present among the keys of users_dict
+    Returns a list of users that are present in user_list, but not present in the list from DB
     :param user_list: Input list of users
     :param existing_users: List of users to check against
     :return: List of new users
@@ -195,18 +192,23 @@ def user_info_extraction_cycle(driver, users_list, is_from_scratch):
         print(config.MSG_DICT["SAVING_USERS_COUNT"].format(len(new_users_info)))
 
 
-def user_info_extraction_cycle_db(driver, users_list):
+def user_info_extraction_cycle_db(driver, users_list, is_from_scratch):
     """
-    Process of extracting user data of user_list and saving them to a file
+    Process of extracting user data of user_list and saving them to a DB
     :param driver: The instantiated web driver
     :param users_list: List of user names
+    :param is_from_scratch: boolean, specify if taking info from scratch
     :return: None
     """
     connection = db_utils.connect_to_db(config.DB_HOST, config.DB_USER, config.DB_PWD, config.DB_NAME)
+    if not is_from_scratch:
+        existing_users = db_utils.select_users(connection, users_list)
+        users_list = get_new_users_db(users_list, existing_users)
     if users_list:
         users_dict = get_users_info(driver, users_list)
-        db_utils.save_user_info(connection, users_dict)
-        print(config.MSG_DICT["SAVING_USERS_COUNT"].format(len(users_dict)))
+        if users_dict:
+            db_utils.save_user_info(connection, users_dict)
+            print(config.MSG_DICT["SAVING_DB_USERS_COUNT"].format(len(users_dict)))
     connection.close()
 
 
@@ -223,8 +225,8 @@ def get_users_loop(driver, users_list, is_from_scratch, chunk_size):
     i = 1
     for chunk in user_chunks:
         print(config.MSG_DICT["PROCESSING_USER_CHUNK"].format(i, len(user_chunks)))
-        user_info_extraction_cycle(driver, chunk, is_from_scratch)
-        # user_info_extraction_cycle_db(driver, chunk)
+        user_info_extraction_cycle_db(driver, chunk, is_from_scratch)
+        i += 1
 
 
 def main(magic_link, from_scratch, chunk_size):  # TODO: bad gateway
