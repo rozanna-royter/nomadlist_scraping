@@ -7,17 +7,17 @@ import argparse
 
 def cities(from_scratch=0, scroll_down=60):
     print("Scraping cities...")
-    scrape_cities.main(from_scratch, scroll_down)
+    scrape_cities.run(from_scratch, scroll_down)
 
 
 def users():
     print("Getting all usernames...")
-    get_users.main()
+    get_users.run()
 
 
 def info(magic_link='', from_scratch=0, chunk_size=10):
     print("Scraping user info...")
-    scrape_users.main(magic_link,from_scratch, chunk_size)
+    scrape_users.run(magic_link, from_scratch, chunk_size)
 
 
 def all():

@@ -9,6 +9,7 @@ def get_cities_list(driver, scroll_down_loop_count):
     Gets list of cities from homepage of nomadlist.com, sorted by total count of users that visited the city
     Scrolls down the page scroll_down_loop_count times
     :param driver: The instantiated web driver
+    :param scroll_down_loop_count: number of scroll downs to perform
     :return: List of cities extracted from the home page
     """
     utils.go_to_url(driver, config.BASE_URL)
@@ -59,6 +60,8 @@ def cities_extraction(driver, from_scrach, scroll_down):
     """
     Process of extracting user data of user_list
     :param driver: The instantiated web driver
+    :param from_scrach: flag to determine whether to override the existing city list or append to it
+    :param scroll_down: number of scroll downs to perform
     :return: List of cities
     """
     cities_list = get_cities_list(driver, scroll_down)
@@ -74,7 +77,7 @@ def cities_extraction(driver, from_scrach, scroll_down):
     return result_list
 
 
-def main(from_scratch, scroll_down_count):
+def run(from_scratch, scroll_down_count):
     driver = webdriver.Chrome(utils.get_chromedriver_path())
     driver.maximize_window()
 
@@ -84,10 +87,6 @@ def main(from_scratch, scroll_down_count):
 
     time.sleep(config.GENERAL_WAITER)
     driver.quit()
-
-
-if __name__ == '__main__':
-    main()
 
 
 
