@@ -47,7 +47,9 @@ def get_users_info(driver, usernames):
         result[username][instagram_string] = get_socials(driver, instagram_string)
 
         bio = soup_html.find(config.ATTRIBUTES_DICT["DIV_TAG"], class_=config.ATTRIBUTES_DICT["USER_BIO"]).text
+
         result[username][config.NAMES_DICT["BIO"]] = bio[:config.BIO_LENGTH]
+        print(result[username][config.NAMES_DICT["BIO"]] )
     return result
 
 

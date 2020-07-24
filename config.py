@@ -89,7 +89,7 @@ MSG_DICT = {
 # Database
 DB_HOST = 'localhost'
 DB_USER = 'root'
-DB_PWD = 'password'
+DB_PWD = 'Bebedolce5'
 DB_NAME = 'nomadlist'
 BIO_LENGTH = 511
 

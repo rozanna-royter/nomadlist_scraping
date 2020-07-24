@@ -84,6 +84,7 @@ def save_user_info(conn, users_dict):
                              user_info['trips-count'], user_info['distance-traveled'], user_info['countries-count'],
                              user_info['cities-count'], user_info['twitter'], user_info['instagram'], user_info['bio'])
                             )
+                print(cur._last_executed)
                 conn.commit()
                 current_user_id = cur.lastrowid
             else:
