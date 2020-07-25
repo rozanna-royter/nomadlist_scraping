@@ -5,6 +5,7 @@ import time
 import utils
 import config
 import db_utils
+import tweeter
 
 
 def get_users_info(driver, usernames):
@@ -43,13 +44,26 @@ def get_users_info(driver, usernames):
 
         twitter_string = config.NAMES_DICT["TWITTER"]
         instagram_string = config.NAMES_DICT["INSTAGRAM"]
-        result[username][twitter_string] = get_socials(driver, twitter_string)
+        twitter_username = get_socials(driver, twitter_string)
+        result[username][twitter_string] = twitter_username
         result[username][instagram_string] = get_socials(driver, instagram_string)
 
         bio = soup_html.find(config.ATTRIBUTES_DICT["DIV_TAG"], class_=config.ATTRIBUTES_DICT["USER_BIO"]).text
 
         result[username][config.NAMES_DICT["BIO"]] = bio[:config.BIO_LENGTH]
-        print(result[username][config.NAMES_DICT["BIO"]] )
+
+        if twitter_username:
+            twi_det_string = config.NAMES_DICT["TWITTER_DETAILS"]
+            twitter_info_dict = tweeter.display_user(twitter_username)
+            if 'errors' in twitter_info_dict.keys():
+                result[username][twi_det_string] = None
+            else:
+                result[username][twi_det_string] = twitter_info_dict
+                tw_desc = result[username][twi_det_string][config.NAMES_DICT["TW_DESC"]]
+                if tw_desc and len(tw_desc) > config.TWI_DESC_LENGTH:
+                    result[username][twi_det_string][config.NAMES_DICT["TW_DESC"]] = tw_desc[:config.TWI_DESC_LENGTH]
+        else:
+            result[username][config.NAMES_DICT["TWITTER_DETAILS"]] = None
     return result
 
 
@@ -184,7 +198,7 @@ def user_info_extraction_cycle(driver, users_list, is_from_scratch):
     if not is_from_scratch:
         try:
             users_dict = utils.read_dict_from_json(users_info_filename)
-        except:
+        except FileNotFoundError:
             users_dict = {}
         users_list = get_new_users(users_list, users_dict)
     if users_list:
@@ -231,7 +245,7 @@ def get_users_loop(driver, users_list, is_from_scratch, chunk_size):
         i += 1
 
 
-def run(magic_link, from_scratch, chunk_size):  # TODO: bad gateway
+def run(magic_link, from_scratch, chunk_size):
     driver = webdriver.Chrome(utils.get_chromedriver_path())
     driver.maximize_window()
     if magic_link != '':
@@ -240,6 +254,6 @@ def run(magic_link, from_scratch, chunk_size):  # TODO: bad gateway
     if config.SAVE_MID_RESULTS:
         get_users_loop(driver, users_list, from_scratch, chunk_size)
     else:
-        user_info_extraction_cycle(driver, users_list)
+        user_info_extraction_cycle_db(driver, users_list, from_scratch)
     time.sleep(config.GENERAL_WAITER)
     driver.quit()

@@ -95,5 +95,5 @@ def get_chromedriver_path():
     osname = sys.platform
     try:
         return config.OS_DRIVER_PATHS.get(osname)
-    except:
+    except TypeError:
         raise NotImplementedError(config.MSG_DICT["OS_ERROR"].format(osname))

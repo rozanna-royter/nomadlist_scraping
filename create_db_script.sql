@@ -37,6 +37,21 @@ CREATE TABLE `countries` (
   `country_name` varchar(100)
 );
 
+CREATE TABLE `twitter_users` (
+  `id` int UNIQUE NOT NULL,
+  `twitter_id` varchar(100),
+  `screen_name` varchar(100),
+  `location` varchar(100),
+  `description` varchar(511),
+  `followers_count` int,
+  `friends_count` int,
+  `favourites_count` int,
+  `verified` boolean,
+  `statuses_count` int
+);
+
+ALTER TABLE `twitter_users` ADD FOREIGN KEY (`id`) REFERENCES `users` (`id`);
+
 ALTER TABLE `trips` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 ALTER TABLE `trips` ADD FOREIGN KEY (`city_country`) REFERENCES `city_country` (`id`);

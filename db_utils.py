@@ -84,9 +84,21 @@ def save_user_info(conn, users_dict):
                              user_info['trips-count'], user_info['distance-traveled'], user_info['countries-count'],
                              user_info['cities-count'], user_info['twitter'], user_info['instagram'], user_info['bio'])
                             )
-                print(cur._last_executed)
                 conn.commit()
                 current_user_id = cur.lastrowid
+
+                twitter_details = user_info['twitter_details']
+                if twitter_details:
+                    cur.execute(config.INSERT_TWITTER_INFO,
+                                (current_user_id, twitter_details['id_str'], twitter_details['screen_name'],
+                                    twitter_details['location'], twitter_details['description'],
+                                    twitter_details['followers_count'], twitter_details['friends_count'],
+                                    twitter_details['favourites_count'], twitter_details['verified'],
+                                    twitter_details['statuses_count']
+                                 )
+                                )
+                    conn.commit()
+
             else:
                 cur.execute(config.UPDATE_USER,
                             (
@@ -98,6 +110,35 @@ def save_user_info(conn, users_dict):
                             )
                 conn.commit()
                 current_user_id = existing_users_dict[username]
+
+                twitter_details = user_info['twitter_details']
+
+                if twitter_details:
+                    query_tw = config.SELECT_TWITTER_USER.format(current_user_id)
+                    cur.execute(query_tw)
+                    tu_id = cur.fetchall()
+
+                    if not tu_id:
+                        cur.execute(config.INSERT_TWITTER_INFO,
+                                    (current_user_id, twitter_details['id_str'], twitter_details['screen_name'],
+                                     twitter_details['location'], twitter_details['description'],
+                                     twitter_details['followers_count'], twitter_details['friends_count'],
+                                     twitter_details['favourites_count'], twitter_details['verified'],
+                                     twitter_details['statuses_count']
+                                     )
+                                    )
+                        conn.commit()
+
+                    else:
+                        cur.execute(config.UPDATE_TWITTER_INFO,
+                                    (twitter_details['id_str'], twitter_details['screen_name'],
+                                     twitter_details['location'], twitter_details['description'],
+                                     twitter_details['followers_count'], twitter_details['friends_count'],
+                                     twitter_details['favourites_count'], twitter_details['verified'],
+                                     twitter_details['statuses_count'], current_user_id
+                                     )
+                                    )
+                        conn.commit()
 
             trips_query = config.SELECT_TRIPS.format(current_user_id)
             cur.execute(trips_query)

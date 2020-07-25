@@ -64,7 +64,9 @@ ATTRIBUTES_DICT = {
 NAMES_DICT = {
     "TRIP_LIST": "trip_list",
     "DISTANCE": "distance-traveled",
-    "TWITTER": 'twitter',
+    "TWITTER": "twitter",
+    "TWITTER_DETAILS": "twitter_details",
+    "TW_DESC": 'description',
     "INSTAGRAM": "instagram",
     "TRIP_EDITOR": "trip_editor",
     "NAME": "name",
@@ -86,12 +88,16 @@ MSG_DICT = {
     "USER_NOT_FOUND": "Page for user {} was not found"
 }
 
+# Twitter API
+TWITTER_API_URL = 'https://api.twitter.com/1.1/users/show.json'
+
 # Database
 DB_HOST = 'localhost'
 DB_USER = 'root'
-DB_PWD = 'Bebedolce5'
-DB_NAME = 'nomadlist'
+DB_PWD = 'password'
+DB_NAME = 'nomadlist1'
 BIO_LENGTH = 511
+TWI_DESC_LENGTH = 511
 
 # Queries
 SELECT_USERS_BY_USERNAME = "SELECT id, username FROM users WHERE username in ({})"
@@ -108,3 +114,9 @@ WHERE city_name = "{}" and country_name = "{}" LIMIT 1'''
 INSERT_CITY_COUNTRY = "INSERT INTO city_country (city_name, country_id) VALUES (%s, %s);"
 SELECT_COUNTRY = "SELECT id FROM countries WHERE country_name = %s LIMIT 1"
 INSERT_COUNTRY = "INSERT INTO countries (country_name) VALUES (%s);"
+INSERT_TWITTER_INFO = '''INSERT INTO twitter_users (id, twitter_id, screen_name, location, description, followers_count,
+friends_count, favourites_count, verified, statuses_count) 
+VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'''
+UPDATE_TWITTER_INFO = '''UPDATE twitter_users SET twitter_id = %s, screen_name = %s, location = %s,  description = %s, 
+followers_count = %s, friends_count = %s, favourites_count = %s, verified = %s, statuses_count = %s WHERE id = %s'''
+SELECT_TWITTER_USER = 'SELECT id FROM twitter_users WHERE id = {} LIMIT 1'

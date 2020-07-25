@@ -68,7 +68,7 @@ def cities_extraction(driver, from_scrach, scroll_down):
     if not from_scrach:
         try:
             cities_list_from_file = utils.read_list_from_file(config.CITIES_FILENAME)
-        except:
+        except FileNotFoundError:
             cities_list_from_file = []
         result_list = cities_list_from_file
         result_list.extend(utils.get_new_items(cities_list_from_file, cities_list))
