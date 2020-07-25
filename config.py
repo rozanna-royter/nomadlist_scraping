@@ -95,7 +95,7 @@ TWITTER_API_URL = 'https://api.twitter.com/1.1/users/show.json'
 DB_HOST = 'localhost'
 DB_USER = 'root'
 DB_PWD = 'password'
-DB_NAME = 'nomadlist1'
+DB_NAME = 'nomadlist'
 BIO_LENGTH = 511
 TWI_DESC_LENGTH = 511
 
