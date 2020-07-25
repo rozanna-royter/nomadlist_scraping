@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS nomadlist;
-USE nomadlist;
+CREATE DATABASE IF NOT EXISTS nomadlist1;
+USE nomadlist1;
 
 CREATE TABLE `users` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
@@ -29,9 +29,18 @@ CREATE TABLE `trips` (
 CREATE TABLE `city_country` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `city_name` varchar(100),
+  `country_id` int
+);
+
+CREATE TABLE `countries` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
   `country_name` varchar(100)
 );
 
 ALTER TABLE `trips` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 ALTER TABLE `trips` ADD FOREIGN KEY (`city_country`) REFERENCES `city_country` (`id`);
+
+ALTER TABLE `city_country` ADD FOREIGN KEY (`country_id`) REFERENCES `countries` (`id`);
+
+ALTER TABLE `countries` ADD CONSTRAINT `country_name` UNIQUE (`country_name`);

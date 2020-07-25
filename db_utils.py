@@ -112,7 +112,20 @@ def save_user_info(conn, users_dict):
 
                     if not cc_id:
 
-                        cur.execute(config.INSERT_CITY_COUNTRY, (trips[trip_id]['name'], trips[trip_id]['country']))
+                        query2 = config.SELECT_COUNTRY
+                        cur.execute(query2, trips[trip_id]['country'])
+                        country_id = cur.fetchall()
+
+                        if not country_id:
+                            cur.execute(config.INSERT_COUNTRY, (trips[trip_id]['country']))
+                            conn.commit()
+                            country_id = cur.lastrowid
+                        else:
+                            country_id = country_id[0]['id']
+
+                        cur.execute(config.INSERT_CITY_COUNTRY,
+                                    (trips[trip_id]['name'], country_id)
+                                    )
                         conn.commit()
 
                         cc_id = cur.lastrowid

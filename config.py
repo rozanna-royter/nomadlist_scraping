@@ -103,5 +103,8 @@ countries_count = %s, cities_count = %s, twitter = %s, instagram = %s, bio = %s 
 SELECT_TRIPS = "SELECT external_id FROM trips WHERE user_id = {}"
 INSERT_TRIPS_INFO = '''INSERT INTO trips (external_id, user_id, trip_start, trip_length, trip_end, city_country) 
 VALUES (%s,%s,%s,%s,%s,%s)'''
-SELECT_CITY_COUNTRY = 'SELECT id FROM city_country WHERE city_name = "{}" and country_name = "{}" LIMIT 1'
-INSERT_CITY_COUNTRY = "INSERT INTO city_country (city_name, country_name) VALUES (%s, %s)"
+SELECT_CITY_COUNTRY = '''SELECT cc.id FROM city_country cc left join countries co ON co.id=cc.country_id
+WHERE city_name = "{}" and country_name = "{}" LIMIT 1'''
+INSERT_CITY_COUNTRY = "INSERT INTO city_country (city_name, country_id) VALUES (%s, %s);"
+SELECT_COUNTRY = "SELECT id FROM countries WHERE country_name = %s LIMIT 1"
+INSERT_COUNTRY = "INSERT INTO countries (country_name) VALUES (%s);"

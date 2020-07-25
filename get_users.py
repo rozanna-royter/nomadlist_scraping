@@ -53,11 +53,7 @@ def get_all_users(list_of_cities):
     return users_names
 
 
-def main():
+def run():
     cities = utils.read_list_from_file(config.CITIES_FILENAME)
     users_list = get_all_users(cities)
     utils.write_list_to_file(config.USERS_FILENAME, users_list)
-
-
-if __name__ == '__main__':
-    main()
