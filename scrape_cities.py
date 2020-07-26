@@ -2,6 +2,10 @@ import time
 from selenium import webdriver
 import utils
 import config
+from logger import Logger
+
+
+logger = Logger("log").logger
 
 
 def get_cities_list(driver, scroll_down_loop_count):
@@ -82,7 +86,7 @@ def run(from_scratch, scroll_down_count):
     driver.maximize_window()
 
     cities_list = cities_extraction(driver, from_scratch, scroll_down_count)
-    print(config.MSG_DICT["CITIES_FOUND_COUNT"].format(len(cities_list)))
+    logger.info(config.MSG_DICT["CITIES_FOUND_COUNT"].format(len(cities_list)))
     utils.write_list_to_file(config.CITIES_FILENAME, cities_list)
 
     time.sleep(config.GENERAL_WAITER)

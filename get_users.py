@@ -2,6 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 import utils
 import config
+from logger import Logger
+
+
+logger = Logger("log").logger
 
 
 def get_domain(city_name):
@@ -47,9 +51,9 @@ def get_all_users(list_of_cities):
         try:
             users_names.extend(scrap_city(domain))
         except FileNotFoundError:
-            print(config.MSG_DICT["CITY_PAGE_NOT_FOUND"].format(city))
+            logger.warning(config.MSG_DICT["CITY_PAGE_NOT_FOUND"].format(city))
         users_names = list(set(users_names))
-        print(config.MSG_DICT["ADDING_USERS"].format(city))
+        logger.info(config.MSG_DICT["ADDING_USERS"].format(city))
     return users_names
 
 

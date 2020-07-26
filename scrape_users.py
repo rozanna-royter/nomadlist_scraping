@@ -6,6 +6,10 @@ import utils
 import config
 import db_utils
 import tweeter
+from logger import Logger
+
+
+logger = Logger("log").logger
 
 
 def get_users_info(driver, usernames):
@@ -28,7 +32,8 @@ def get_users_info(driver, usernames):
             time.sleep(config.GENERAL_WAITER)
             like_button = soup_html.find(config.ATTRIBUTES_DICT["DIV_TAG"], class_=config.ATTRIBUTES_DICT["LIKE_USER"])
             if not like_button:
-                print(config.MSG_DICT["USER_NOT_FOUND"].format(username))
+                logger.info(config.MSG_DICT["USER_NOT_FOUND"].format(username))
+                # print(config.MSG_DICT["USER_NOT_FOUND"].format(username))
                 continue
 
         result[username] = {}
@@ -205,7 +210,8 @@ def user_info_extraction_cycle(driver, users_list, is_from_scratch):
         new_users_info = get_users_info(driver, users_list)
         users_dict.update(new_users_info)
         utils.write_dict_to_json(users_info_filename, users_dict)
-        print(config.MSG_DICT["SAVING_USERS_COUNT"].format(len(new_users_info)))
+        logger.info(config.MSG_DICT["SAVING_USERS_COUNT"].format(len(new_users_info)))
+        # print(config.MSG_DICT["SAVING_USERS_COUNT"].format(len(new_users_info)))
 
 
 def user_info_extraction_cycle_db(driver, users_list, is_from_scratch):
@@ -224,7 +230,8 @@ def user_info_extraction_cycle_db(driver, users_list, is_from_scratch):
         users_dict = get_users_info(driver, users_list)
         if users_dict:
             db_utils.save_user_info(connection, users_dict)
-            print(config.MSG_DICT["SAVING_DB_USERS_COUNT"].format(len(users_dict)))
+            logger.info(config.MSG_DICT["SAVING_DB_USERS_COUNT"].format(len(users_dict)))
+            # print(config.MSG_DICT["SAVING_DB_USERS_COUNT"].format(len(users_dict)))
     connection.close()
 
 
@@ -240,7 +247,8 @@ def get_users_loop(driver, users_list, is_from_scratch, chunk_size):
     user_chunks = [users_list[x:x + chunk_size] for x in range(0, len(users_list), chunk_size)]
     i = 1
     for chunk in user_chunks:
-        print(config.MSG_DICT["PROCESSING_USER_CHUNK"].format(i, len(user_chunks)))
+        logger.info(config.MSG_DICT["PROCESSING_USER_CHUNK"].format(i, len(user_chunks)))
+        # print(config.MSG_DICT["PROCESSING_USER_CHUNK"].format(i, len(user_chunks)))
         user_info_extraction_cycle_db(driver, chunk, is_from_scratch)
         i += 1
 

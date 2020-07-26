@@ -2,6 +2,10 @@ import json
 import os
 import sys
 import config
+from logger import Logger
+
+
+logger = Logger("log").logger
 
 
 def go_to_url(driver, url):
@@ -21,7 +25,6 @@ def write_dict_to_json(filename, dct):
     :param dct: Dictionary that's being written
     :return: None
     """
-    # check_if_file_exists(filename)
     with open(filename, 'w') as file:
         file.write(json.dumps(dct))
 
@@ -44,7 +47,6 @@ def write_list_to_file(filename, lst):
     :param lst: List that's being written
     :return: None
     """
-    # check_if_file_exists(filename)
     with open(filename, 'w') as f:
         for li in lst:
             f.write('%s\n' % li)
@@ -68,7 +70,7 @@ def check_if_file_exists(filename):
     :return: None
     """
     if not os.path.isfile(filename):
-        print(config.MSG_DICT["FILE_NOT_FOUND"].format(filename))
+        logger.error(config.MSG_DICT["FILE_NOT_FOUND"].format(filename))
         sys.exit(1)
 
 
@@ -96,4 +98,5 @@ def get_chromedriver_path():
     try:
         return config.OS_DRIVER_PATHS.get(osname)
     except TypeError:
+        logger.error(config.MSG_DICT["OS_ERROR"].format(osname))
         raise NotImplementedError(config.MSG_DICT["OS_ERROR"].format(osname))
