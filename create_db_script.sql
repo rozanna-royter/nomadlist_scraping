@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS nomadlist1;
-USE nomadlist1;
+CREATE DATABASE IF NOT EXISTS nomadlist;
+USE nomadlist;
 
 CREATE TABLE `users` (
   `id` int PRIMARY KEY AUTO_INCREMENT,

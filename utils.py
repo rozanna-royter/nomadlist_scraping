@@ -5,7 +5,7 @@ import config
 from logger import Logger
 
 
-logger = Logger("log").logger
+logger = Logger("utils").logger
 
 
 def go_to_url(driver, url):

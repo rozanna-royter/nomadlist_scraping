@@ -13,7 +13,7 @@ class Logger(object):
         # set log level
         self.logger.setLevel(logging.INFO)
         # define file handler and set formatter
-        file_handler = logging.FileHandler(f'{name}.log')
+        file_handler = logging.FileHandler(f'Logs/{name}.log')
         formatter = logging.Formatter('%(asctime)s : %(levelname)s : %(name)s : %(message)s')
         file_handler.setFormatter(formatter)
         # add file handler to logger

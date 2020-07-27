@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
 from bs4 import BeautifulSoup
 import time
@@ -9,7 +10,7 @@ import tweeter
 from logger import Logger
 
 
-logger = Logger("log").logger
+logger = Logger("scrape_users").logger
 
 
 def get_users_info(driver, usernames):
@@ -254,7 +255,11 @@ def get_users_loop(driver, users_list, is_from_scratch, chunk_size):
 
 
 def run(magic_link, from_scratch, chunk_size):
-    driver = webdriver.Chrome(utils.get_chromedriver_path())
+    chrome_options = Options()
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    driver = webdriver.Chrome(utils.get_chromedriver_path(), chrome_options=chrome_options)
     driver.maximize_window()
     if magic_link != '':
         log_in(driver, magic_link)

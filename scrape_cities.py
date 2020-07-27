@@ -1,11 +1,12 @@
 import time
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 import utils
 import config
 from logger import Logger
 
 
-logger = Logger("log").logger
+logger = Logger("scrape_cities").logger
 
 
 def get_cities_list(driver, scroll_down_loop_count):
@@ -82,7 +83,11 @@ def cities_extraction(driver, from_scrach, scroll_down):
 
 
 def run(from_scratch, scroll_down_count):
-    driver = webdriver.Chrome(utils.get_chromedriver_path())
+    chrome_options = Options()
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    driver = webdriver.Chrome(utils.get_chromedriver_path(), chrome_options=chrome_options)
     driver.maximize_window()
 
     cities_list = cities_extraction(driver, from_scratch, scroll_down_count)

@@ -5,7 +5,7 @@ import config
 from logger import Logger
 
 
-logger = Logger("log").logger
+logger = Logger("get_users").logger
 
 
 def get_domain(city_name):
