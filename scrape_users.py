@@ -7,6 +7,8 @@ import utils
 import config
 import db_utils
 import tweeter
+import json
+import unicodedata
 from logger import Logger
 
 
@@ -70,7 +72,12 @@ def get_users_info(driver, usernames):
                     result[username][twi_det_string][config.NAMES_DICT["TW_DESC"]] = tw_desc[:config.TWI_DESC_LENGTH]
         else:
             result[username][config.NAMES_DICT["TWITTER_DETAILS"]] = None
+
     return result
+
+
+def escape_special_chars(text):
+    return unicodedata.normalize('NFD', text).encode('ascii', 'ignore')
 
 
 def print_details(info, username):
@@ -111,8 +118,9 @@ def get_trips_selenium(driver):
         trips_dict[tid] = {}
         for element in config.TRIP_ELEMENTS:
             if element == config.NAMES_DICT["NAME"]:
-                trips_dict[tid][element] = driver.find_element_by_xpath(
-                    config.CITY_NAME_ELEMENT_XPATH.format(tid, element)).text
+                city_name = driver.find_element_by_xpath(config.CITY_NAME_ELEMENT_XPATH.format(tid, element)).text
+                city_name = escape_special_chars(city_name)
+                trips_dict[tid][element] = city_name
             else:
                 trips_dict[tid][element] = driver.find_element_by_xpath(
                     config.TRIP_ELEMENT_XPATH.format(tid, element)).text
