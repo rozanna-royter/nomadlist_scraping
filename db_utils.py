@@ -182,3 +182,4 @@ def save_user_info(conn, users_dict):
         except pymysql.err.InternalError as error:
             print('error in sql. user: ', username)
             print('dict: ', user_info)
+            print(error)
