@@ -7,7 +7,6 @@ import utils
 import config
 import db_utils
 import tweeter
-import json
 import unicodedata
 from logger import Logger
 
@@ -77,7 +76,14 @@ def get_users_info(driver, usernames):
 
 
 def escape_special_chars(text):
-    return unicodedata.normalize('NFD', text).encode('ascii', 'ignore')
+    """
+    Changes special characters from non-english languages to an english alternative
+    :param text: string to modify
+    :return: updated string
+    """
+    updated_text = text.replace('ı', 'i')
+    updated_text = unicodedata.normalize('NFD', updated_text).encode('ascii', 'ignore')
+    return updated_text
 
 
 def print_details(info, username):

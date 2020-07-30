@@ -148,8 +148,7 @@ def save_user_info(conn, users_dict):
                 for trip_id in trips:
                     if trip_id not in existing_trips_ext_ids:
 
-                        query = config.SELECT_CITY_COUNTRY.format(trips[trip_id]['name'], trips[trip_id]['country'])
-                        cur.execute(query)
+                        cur.execute(config.SELECT_CITY_COUNTRY, (trips[trip_id]['name'], trips[trip_id]['country']))
                         cc_id = cur.fetchall()
 
                         if not cc_id:
