@@ -57,8 +57,9 @@ def get_users_info(driver, usernames):
         result[username][twitter_string] = twitter_username
         result[username][instagram_string] = get_socials(driver, instagram_string)
 
-        bio = soup_html.find(config.ATTRIBUTES_DICT["DIV_TAG"], class_=config.ATTRIBUTES_DICT["USER_BIO"]).text
-        bio = remove_emojis(bio)
+        # bio = soup_html.find(config.ATTRIBUTES_DICT["DIV_TAG"], class_=config.ATTRIBUTES_DICT["USER_BIO"]).text
+        # bio = remove_emojis(bio)
+        bio = ''  # TODO: fix emojis and others
 
         result[username][config.NAMES_DICT["BIO"]] = bio[:config.BIO_LENGTH]
 

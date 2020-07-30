@@ -85,7 +85,8 @@ MSG_DICT = {
     "FILE_NOT_FOUND": "File {} doesn't exist",
     "CITY_PAGE_NOT_FOUND": "{} city page not found",
     "ADDING_USERS": "adding users from {}",
-    "USER_NOT_FOUND": "Page for user {} was not found"
+    "USER_NOT_FOUND": "Page for user {} was not found",
+    "DB_SAVE_ERROR": "Error saving user to MySQL: {}/nError: {}"
 }
 
 # Twitter API

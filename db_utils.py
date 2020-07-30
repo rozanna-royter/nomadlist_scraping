@@ -1,5 +1,9 @@
 import pymysql.cursors
 import config
+from logger import Logger
+
+
+logger = Logger("db_utils").logger
 
 
 def connect_to_db(host, user, password, db):
@@ -179,6 +183,4 @@ def save_user_info(conn, users_dict):
                 cur.executemany(config.INSERT_TRIPS_INFO, trips_list)
                 conn.commit()
         except pymysql.err.InternalError as error:
-            print('error in sql. user: ', username)
-            print('dict: ', user_info)
-            print(error)
+            logger.error(config.MSG_DICT["DB_SAVE_ERROR"].format(username, error))
