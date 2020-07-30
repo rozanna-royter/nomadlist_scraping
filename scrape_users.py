@@ -1,3 +1,5 @@
+import re
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
@@ -56,6 +58,7 @@ def get_users_info(driver, usernames):
         result[username][instagram_string] = get_socials(driver, instagram_string)
 
         bio = soup_html.find(config.ATTRIBUTES_DICT["DIV_TAG"], class_=config.ATTRIBUTES_DICT["USER_BIO"]).text
+        bio = remove_emojis(bio)
 
         result[username][config.NAMES_DICT["BIO"]] = bio[:config.BIO_LENGTH]
 
@@ -73,6 +76,21 @@ def get_users_info(driver, usernames):
             result[username][config.NAMES_DICT["TWITTER_DETAILS"]] = None
 
     return result
+
+
+def remove_emojis(text):
+    """
+    Removes emoji symbols from text
+    :param text: str
+    :return: str
+    """
+    regex_pattern = re.compile(pattern="["
+        u"\U0001F600-\U0001F64F"  # emoticons
+        u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+        u"\U0001F680-\U0001F6FF"  # transport & map symbols
+        u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+                           "]+", flags=re.UNICODE)
+    return regex_pattern.sub(r'', text)
 
 
 def escape_special_chars(text):
