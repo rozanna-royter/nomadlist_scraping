@@ -15,9 +15,9 @@ def users():
     get_users.run()
 
 
-def info(magic_link='', from_scratch=0, chunk_size=10):
+def info(magic_link='', code='', from_scratch=0, chunk_size=10):
     print("Scraping user info...")
-    scrape_users.run(magic_link, from_scratch, chunk_size)
+    scrape_users.run(magic_link, code, from_scratch, chunk_size)
 
 
 def all():
@@ -49,7 +49,7 @@ def main():
                                         |  /                                                       /.
                                         \_/_______________________________________________________/.
                                      ''',
-                                     epilog="Copyrights @Rozana Royter\n "
+                                     epilog="Copyrights @Rozanna Royter\n "
                                             "          @Ron Zehavi",
                                      formatter_class=argparse.RawDescriptionHelpFormatter,
                                      add_help=True
@@ -71,6 +71,10 @@ def main():
                                                            'it will not scrap data that is open to subscribers only, '
                                                            'like social networks accounts (instagram, twitter...)'
                         , default='')
+    parser.add_argument('--code', '-cd', type=str, help='Security code for login from NomadList, if not passed'
+                                                            'it will not scrap data that is open to subscribers only, '
+                                                            'like social networks accounts (instagram, twitter...)'
+                        , default='')
     parser.add_argument('--new', '-n', type=bool, help='start scraping data from scratch or adding info to existing db',
                         default=False)
     parser.add_argument('--chunk_size', '-c', type=int, help='program scraps users and saves info by groups of users, '
@@ -88,7 +92,7 @@ def main():
     if args.run == 'cities':
         function_map[args.run](args.new, args.scroll_down)
     elif args.run == 'info':
-        function_map[args.run](args.login_url, args.new, args.chunk_size)
+        function_map[args.run](args.login_url, args.code, args.new, args.chunk_size)
     else:
         function_map[args.run]()
 

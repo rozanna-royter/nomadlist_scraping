@@ -1,5 +1,4 @@
 import re
-
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
@@ -45,9 +44,9 @@ def get_users_info(driver, usernames):
 
         for element in config.ELEMENTS_TO_PARSE:
             result[username][element] = get_text_from_info_bar(soup_html, element)
-        distance_traveled = config.NAMES_DICT['DISTANCE']
-        if result[username][distance_traveled]:
-            result[username][distance_traveled] = result[username][distance_traveled].replace(',', '')
+        # distance_traveled = config.NAMES_DICT['DISTANCE']
+        # if result[username][distance_traveled]:
+        #     result[username][distance_traveled] = result[username][distance_traveled].replace(',', '')
 
         result[username][config.NAMES_DICT["TRIP_LIST"]] = get_trips_selenium(driver)
 
@@ -178,21 +177,35 @@ def get_text_from_info_bar(soup, el_name):
     :return: Appropriate info by element name (if exists, else - None)
     """
     try:
-        return soup.select_one(config.SELECT_CLASS_CONTAINS.format(el_name)).find(
+        element = soup.select_one(config.SELECT_CLASS_CONTAINS.format(el_name)).find(
             config.ATTRIBUTES_DICT["DIV_TAG"], attrs={config.ATTRIBUTES_DICT["CLASS"]: config.NAMES_DICT["NUMBER"]}
         ).text
+        element = element.replace(',', '')
+        return element
     except AttributeError:
         return None
 
 
-def log_in(driver, m_link):
+def log_in(driver, m_link, code):
     """
     Log in using a link
+    :param code: security code for log in
     :param m_link: The link for log in as subscriber
     :param driver: The instantiated web driver
     :return: None
     """
     utils.go_to_url(driver, m_link)
+    # time.sleep(config.GENERAL_WAITER)
+    # try:
+    #     digits_field = driver.find_element_by_name("digits")
+    #     digits_field.send_keys(code)
+    #     time.sleep(config.GENERAL_WAITER)
+    #
+    #     send_button = driver.find_element_by_xpath('//input[@type="submit"]')
+    #     send_button.click()
+    #     time.sleep(config.GENERAL_WAITER)
+    # except NoSuchElementException:
+    #     return None
 
 
 def get_new_users(user_list, users_dict):
@@ -287,7 +300,7 @@ def get_users_loop(driver, users_list, is_from_scratch, chunk_size):
         i += 1
 
 
-def run(magic_link, from_scratch, chunk_size):
+def run(magic_link, code, from_scratch, chunk_size):
     chrome_options = Options()
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
@@ -295,7 +308,7 @@ def run(magic_link, from_scratch, chunk_size):
     driver = webdriver.Chrome(utils.get_chromedriver_path(), chrome_options=chrome_options)
     driver.maximize_window()
     if magic_link != '':
-        log_in(driver, magic_link)
+        log_in(driver, magic_link, code)
     users_list = utils.read_list_from_file(config.USERS_LIST_FILENAME)
     if config.SAVE_MID_RESULTS:
         get_users_loop(driver, users_list, from_scratch, chunk_size)
