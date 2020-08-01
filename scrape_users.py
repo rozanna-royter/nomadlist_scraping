@@ -195,17 +195,17 @@ def log_in(driver, m_link, code):
     :return: None
     """
     utils.go_to_url(driver, m_link)
-    # time.sleep(config.GENERAL_WAITER)
-    # try:
-    #     digits_field = driver.find_element_by_name("digits")
-    #     digits_field.send_keys(code)
-    #     time.sleep(config.GENERAL_WAITER)
-    #
-    #     send_button = driver.find_element_by_xpath('//input[@type="submit"]')
-    #     send_button.click()
-    #     time.sleep(config.GENERAL_WAITER)
-    # except NoSuchElementException:
-    #     return None
+    time.sleep(config.GENERAL_WAITER)
+    try:
+        digits_field = driver.find_element_by_name("digits")
+        digits_field.send_keys(code)
+        time.sleep(config.GENERAL_WAITER)
+
+        send_button = driver.find_element_by_xpath('//input[@type="submit"]')
+        send_button.click()
+        time.sleep(config.GENERAL_WAITER)
+    except NoSuchElementException:
+        return None
 
 
 def get_new_users(user_list, users_dict):
