@@ -72,7 +72,7 @@ def get_users_info(driver, usernames):
                 tw_desc = result[username][twi_det_string][config.NAMES_DICT["TW_DESC"]]
                 if tw_desc:
                     tw_desc = escape_special_chars(tw_desc)
-                    tw_desc = remove_emojis(tw_desc)
+
                     if len(tw_desc) > config.TWI_DESC_LENGTH:
                         result[username][twi_det_string][config.NAMES_DICT["TW_DESC"]] = tw_desc[:config.TWI_DESC_LENGTH]
                     else:
@@ -81,7 +81,7 @@ def get_users_info(driver, usernames):
                 tw_loc = result[username][twi_det_string]['location']
                 if tw_loc:
                     tw_loc = escape_special_chars(tw_loc)
-                    tw_loc = remove_emojis(tw_loc)
+
                     result[username][twi_det_string]['location'] = tw_loc
 
         else:
