@@ -308,6 +308,7 @@ def run(magic_link, code, from_scratch, chunk_size):
     driver = webdriver.Chrome(utils.get_chromedriver_path(), chrome_options=chrome_options)
     driver.maximize_window()
     if magic_link != '':
+        magic_link = f'https://nomadlist.com/userApi.php?action=login_by_email&hash={magic_link}'
         log_in(driver, magic_link, code)
     users_list = utils.read_list_from_file(config.USERS_LIST_FILENAME)
     if config.SAVE_MID_RESULTS:
