@@ -184,3 +184,6 @@ def save_user_info(conn, users_dict):
                 conn.commit()
         except pymysql.err.InternalError as error:
             logger.error(config.MSG_DICT["DB_SAVE_ERROR"].format(username, error))
+        except pymysql.err.DataError as error:
+            logger.error(config.MSG_DICT["DB_SAVE_ERROR"].format(username, error))
+            logger.info(f'User dictionary: {user_info}')
