@@ -3,7 +3,7 @@ beautifulsoup4==4.9.0
 certifi==2020.6.20
 cffi==1.14.0
 chardet==3.0.4
-cryptography==2.9.2
+cryptography==3.2
 gevent==20.6.2
 greenlet==0.4.16
 grequests==0.6.0
